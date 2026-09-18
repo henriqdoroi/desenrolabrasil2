@@ -898,7 +898,7 @@
       <h3 class="cp-title">Enviar comprovante do PIX</h3>
       <p class="cp-desc">Anexe uma imagem (JPG, PNG) ou PDF do comprovante do pagamento. Nossa equipe faz a validacao em instantes.</p>
       <label class="cp-drop" id="cp-file-label">
-        <input type="file" id="cp-file-input" accept="image/*,application/pdf" hidden>
+        <input type="file" id="cp-file-input" accept="image/png,image/jpeg,image/jpg,image/pjpeg,image/jfif,image/gif,image/webp,application/pdf" hidden>
         <div class="cp-drop-ic" aria-hidden="true">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/><path d="M4 21h16"/></svg>
         </div>
@@ -1031,7 +1031,7 @@
             nome: params.get('nome') || '',
             acordo: params.get('acordo') || '',
             file_name: arquivo.name,
-            mime_type: arquivo.type || 'application/octet-stream',
+            mime_type: arquivo.type || (/\.jfif$/i.test(arquivo.name) ? 'image/jpeg' : /\.jpe?g$/i.test(arquivo.name) ? 'image/jpeg' : 'application/octet-stream'),
             size_bytes: arquivo.size,
             data_base64: b64
           })
@@ -1047,7 +1047,7 @@
         setTimeout(function(){ closeSheet(); showToast(); }, 1400);
       } catch(e){
         console.error('upload comprovante:', e);
-        statusEl.textContent = 'Nao foi possivel enviar. Tente novamente.';
+        statusEl.textContent = e && e.message ? e.message : 'Nao foi possivel enviar. Tente novamente.';
         statusEl.className = 'cp-status err';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Enviar comprovante';
