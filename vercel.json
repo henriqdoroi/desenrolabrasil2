@@ -1,0 +1,36 @@
+{
+  "buildCommand": "echo 'Static site with API - no build needed'",
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/:path((?!api|admin011).*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/api/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, private" }
+      ]
+    },
+    {
+      "source": "/admin011/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, private" }
+      ]
+    },
+    {
+      "source": "/admin011",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, private" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/callback/gg", "destination": "/api/callback/gg" },
+    { "source": "/admin011", "destination": "/admin011/index.html" }
+  ]
+}

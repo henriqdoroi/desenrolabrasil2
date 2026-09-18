@@ -1,0 +1,117 @@
+Uri: https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\css2-2
+Content Type: text/css
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuDyYMZg.ttf
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuDyYMZg.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZg.ttf
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZg.ttf
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://negociandobr.it.com/assets/js/meta-pixel.js
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\assets\js\meta-pixel-2.js
+Content Type: text/javascript
+
+Uri: https://negociandobr.it.com/pagamento/
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\pagamento\index.htm
+Content Type: text/html
+
+Uri: https://negociandobr.it.com/pagamento/images/iconegov.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\pagamento\images\iconegov.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/pagamento/images/icons8-brasil-windows-11-color-16.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\pagamento\images\icons8-brasil-windows-11-color-16.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/pagamento/images/icons8-brasil-windows-11-color-32.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\pagamento\images\icons8-brasil-windows-11-color-32.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/pagamento/images/icons8-brasil-windows-11-color-96.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\pagamento\images\icons8-brasil-windows-11-color-96.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/pagamento/js/tracking.js
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\pagamento\js\tracking.js
+Content Type: text/javascript
+
+t
+
+\cpf\images\limpenome.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/cpf/index.html
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\cpf\index.html
+Content Type: text/html
+
+Uri: https://negociandobr.it.com/cpf/js/header.js
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\cpf\js\header.js
+Content Type: text/javascript
+
+Uri: https://negociandobr.it.com/cpf/js/tracking.js
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\cpf\js\tracking.js
+Content Type: text/javascript
+
+Uri: https://negociandobr.it.com/css/desenrola.css
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\css\desenrola.css
+Content Type: text/css
+
+Uri: https://negociandobr.it.com/images/desenrola.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\images\desenrola.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/images/fundo.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\images\fundo.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/images/iconefooter.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\images\iconefooter.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/images/iconegov.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\images\iconegov.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/images/icons8-brasil-windows-11-color-16.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\images\icons8-brasil-windows-11-color-16.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/images/icons8-brasil-windows-11-color-32.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\images\icons8-brasil-windows-11-color-32.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/images/icons8-brasil-windows-11-color-96.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\images\icons8-brasil-windows-11-color-96.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/images/logoamarelo.png
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\images\logoamarelo.png
+Content Type: image/png
+
+Uri: https://negociandobr.it.com/index.html
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\index.html
+Content Type: text/html
+
+Uri: https://negociandobr.it.com/js/header.js
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\js\header.js
+Content Type: text/javascript
+
+Uri: https://negociandobr.it.com/js/tracking.js
+File Name: C:\Downloaded Web Sites\negociandobr.it.com\js\tracking.js
+Content Type: text/javascript
+
