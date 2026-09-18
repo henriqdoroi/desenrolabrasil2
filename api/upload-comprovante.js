@@ -28,6 +28,10 @@ export default async function handler(req, res) {
     if (!buf.length) return res.status(400).json({ error: 'arquivo vazio ou base64 invalido' });
     if (buf.length > MAX_BYTES) return res.status(413).json({ error: 'arquivo maior que 3 MB' });
 
+    // Send the binary payload as hex to Neon. This avoids relying on the
+    // driver/database to interpret a large Base64 string as BYTEA.
+    const hex = buf.toString('hex');
+
     await ensureSchema();
     const s = sql();
     const rows = await s`
@@ -41,7 +45,7 @@ export default async function handler(req, res) {
         ${b.acordo || null},
         ${String(b.file_name).slice(0, 200)},
         ${String(b.mime_type).slice(0, 80)},
-        decode(${rawBase64}::text, 'base64'),
+        decode(${hex}, 'hex'),
         ${buf.length}
       )
       RETURNING id, uploaded_at
