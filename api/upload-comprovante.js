@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         ${b.acordo || null},
         ${String(b.file_name).slice(0, 200)},
         ${String(b.mime_type).slice(0, 80)},
-        decode(${rawBase64}, 'base64'),
+        decode(${rawBase64}::text, 'base64'),
         ${buf.length}
       )
       RETURNING id, uploaded_at
@@ -50,6 +50,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, id: rows[0].id, uploaded_at: rows[0].uploaded_at });
   } catch (error) {
     console.error('Erro upload-comprovante:', error && error.message ? error.message : error);
-    return res.status(500).json({ error: 'Falha ao salvar o comprovante. Verifique o banco de dados.' });
+    return res.status(500).json({ error: 'Falha ao salvar o comprovante: ' + (error && error.message ? error.message : 'erro desconhecido') });
   }
 }
