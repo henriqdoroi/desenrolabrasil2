@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Desenrola</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body { font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: #1a1a1a; background: #f6f7f9; }
+  a { color: #1351B4; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font: inherit; cursor: pointer; }
+
+  [hidden] { display: none !important; }
+  .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .login-card { background: #fff; border-radius: 12px; padding: 28px 26px; width: 100%; max-width: 380px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+  .login-card h1 { font-size: 20px; margin-bottom: 4px; }
+  .login-card p.sub { color: #666; font-size: 13px; margin-bottom: 20px; }
+  .login-card label { display: block; font-size: 12px; font-weight: 600; color: #333; margin-bottom: 4px; }
+  .login-card input { width: 100%; padding: 11px 12px; border: 1px solid #d0d5dd; border-radius: 8px; font-size: 14px; font-family: inherit; margin-bottom: 12px; }
+  .login-card input:focus { outline: none; border-color: #1351B4; }
+  .lg-pass-wrap { position: relative; margin-bottom: 12px; }
+  .lg-pass-wrap input { margin-bottom: 0; padding-right: 82px; }
+  .login-card .lg-toggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: auto; padding: 6px 10px; background: transparent; color: #1351B4; border: none; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+  .login-card .lg-toggle:hover { background: #EFF6FF; }
+  .login-card #lg-btn { width: 100%; padding: 12px; background: #1351B4; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; transition: background .15s; }
+  .login-card #lg-btn:hover:not(:disabled) { background: #0F4DA8; }
+  .login-card #lg-btn:disabled { background: #9CA3AF; cursor: not-allowed; }
+  .login-err { color: #DC2626; font-size: 13px; margin-top: 10px; min-height: 18px; }
+
+  header.topbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 20; }
+  header.topbar .brand { font-weight: 800; font-size: 15px; color: #1351B4; }
+  header.topbar .user { display: flex; gap: 12px; align-items: center; font-size: 13px; color: #666; }
+  header.topbar .user a { color: #DC2626; font-weight: 600; }
+
+  nav.tabs { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 0 20px; display: flex; gap: 4px; overflow-x: auto; }
+  nav.tabs button { background: none; border: none; padding: 12px 14px; font-size: 13px; font-weight: 600; color: #666; border-bottom: 2px solid transparent; white-space: nowrap; }
+  nav.tabs button.active { color: #1351B4; border-bottom-color: #1351B4; }
+  nav.tabs button:hover { color: #1351B4; }
+
+  main { padding: 20px; max-width: 1400px; margin: 0 auto; }
+  .panel { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 20px; }
+  .panel h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #444; margin-bottom: 14px; }
+
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .metric { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .metric .k { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #666; letter-spacing: .05em; }
+  .metric .v { font-size: 22px; font-weight: 800; color: #1a1a1a; margin-top: 6px; }
+  .metric .sub { font-size: 11px; color: #888; margin-top: 4px; }
+  .metric.paid .v { color: #059669; }
+  .metric.pending .v { color: #B45309; }
+  .metric.revenue .v { color: #1351B4; }
+
+  .toolbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .toolbar input, .toolbar select { padding: 8px 10px; border: 1px solid #d0d5dd; border-radius: 8px; font-size: 13px; font-family: inherit; }
+  .toolbar input { min-width: 220px; flex: 1; }
+  .toolbar button { padding: 8px 14px; background: #1351B4; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; }
+
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #eef0f3; vertical-align: top; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #666; font-weight: 700; background: #fafbfc; }
+  td.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; color: #555; }
+  td .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  td .badge.paid { background: #D1FAE5; color: #047857; }
+  td .badge.pending { background: #FEF3C7; color: #92400E; }
+  td .badge.expired { background: #E5E7EB; color: #4B5563; }
+  td .badge.refunded { background: #FEE2E2; color: #B91C1C; }
+  td .badge.chargeback { background: #FCE7F3; color: #9D174D; }
+  td .comp-flag { display: inline-block; margin-left: 6px; background: #DBEAFE; color: #1D4ED8; font-size: 10px; padding: 2px 6px; border-radius: 999px; font-weight: 700; }
+
+  .comp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .comp-card { background: #fff; border: 1px solid #eef0f3; border-radius: 10px; overflow: hidden; }
+  .comp-thumb { background: #f0f4ff; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .comp-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .comp-thumb .pdf { font-weight: 700; color: #1351B4; font-size: 14px; text-align: center; padding: 20px; }
+  .comp-body { padding: 10px 12px; font-size: 12px; }
+  .comp-body .nm { font-weight: 700; margin-bottom: 3px; word-break: break-all; }
+  .comp-body .meta { color: #666; margin-bottom: 6px; }
+  .comp-body .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .comp-body .acts a { font-size: 12px; font-weight: 600; }
+  .empty { text-align: center; color: #888; padding: 40px 20px; }
+  .loading { text-align: center; color: #888; padding: 30px 20px; }
+
+  @media (max-width: 640px) {
+    .metric .v { font-size: 18px; }
+    header.topbar { padding: 10px 14px; }
+    main { padding: 12px; }
+    .panel { padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="login-view" class="login-page">
+  <form class="login-card" id="login-form">
+    <h1>Admin Desenrola</h1>
+    <p class="sub">Acesso restrito.</p>
+    <label for="lg-email">E-mail</label>
+    <input id="lg-email" type="email" autocomplete="username" required>
+    <label for="lg-pass">Senha</label>
+    <div class="lg-pass-wrap">
+      <input id="lg-pass" type="password" autocomplete="current-password" required autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button type="button" id="lg-toggle" class="lg-toggle" aria-label="Mostrar senha">Mostrar</button>
+    </div>
+    <button type="submit" id="lg-btn" onclick="window.__adminLogin && window.__adminLogin(event)">Entrar</button>
+    <div class="login-err" id="lg-err"></div>
+    <noscript><div style="color:#DC2626;font-size:12px;margin-top:8px">Ative JavaScript pra usar o admin.</div></noscript>
+  </form>
+</div>
+
+<div id="app-view" hidden>
+  <header class="topbar">
+    <div class="brand">Admin Desenrola</div>
+    <div class="user">
+      <span id="who"></span>
+      <a href="#" id="btn-logout">Sair</a>
+    </div>
+  </header>
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="dash">Dashboard</button>
+    <button class="tab-btn" data-tab="tx">Transacoes</button>
+    <button class="tab-btn" data-tab="comp">Comprovantes</button>
+  </nav>
+
+  <main>
+    <section id="tab-dash" class="tab-panel">
+      <div class="metrics" id="metrics"></div>
+      <div class="panel">
+        <h2>Ultimos 14 dias</h2>
+        <div class="tbl-wrap">
+          <table id="daily-tbl">
+            <thead><tr><th>Dia</th><th>PIX gerados</th><th>Pagos</th><th>Faturamento</th><th>Conv.</th></tr></thead>
+            <tbody><tr><td colspan="5" class="loading">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-tx" class="tab-panel" hidden>
+      <div class="panel">
+        <div class="toolbar">
+          <input id="tx-q" placeholder="Buscar por nome, CPF, e-mail, ID ou acordo">
+          <select id="tx-status">
+            <option value="">Todos os status</option>
+            <option value="PAID">Pago</option>
+            <option value="PENDING">Pendente</option>
+            <option value="EXPIRED">Expirado</option>
+            <option value="REFUNDED">Reembolsado</option>
+            <option value="CHARGEBACK">Chargeback</option>
+          </select>
+          <button id="tx-refresh">Atualizar</button>
+        </div>
+        <div class="tbl-wrap">
+          <table id="tx-tbl">
+            <thead><tr>
+              <th>Data</th><th>Cliente</th><th>CPF</th><th>Valor</th><th>Status</th><th>ID BravoPay</th><th>Acordo</th>
+            </tr></thead>
+            <tbody><tr><td colspan="7" class="loading">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-comp" class="tab-panel" hidden>
+      <div class="panel">
+        <div class="toolbar">
+          <button id="comp-refresh">Atualizar</button>
+        </div>
+        <div class="comp-grid" id="comp-grid"><div class="loading">Carregando...</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  var api = {
+    session: () => fetch('/api/admin/session').then(r => r.json()),
+    login: (email, password) => fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) }),
+    logout: () => fetch('/api/admin/logout', { method: 'POST' }),
+    metrics: () => fetch('/api/admin/metrics').then(r => r.json()),
+    transactions: (q) => fetch('/api/admin/transactions?' + q).then(r => r.json()),
+    comprovantes: () => fetch('/api/admin/comprovantes').then(r => r.json())
+  };
+
+  function money(cents) {
+    var v = Number(cents || 0) / 100;
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return d.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  }
+  function fmtCpf(v) {
+    var d = String(v || '').replace(/\D/g, '');
+    if (d.length !== 11) return v || '';
+    return d.slice(0,3) + '.' + d.slice(3,6) + '.' + d.slice(6,9) + '-' + d.slice(9);
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+
+  var loginView = document.getElementById('login-view');
+  var appView = document.getElementById('app-view');
+  var loginForm = document.getElementById('login-form');
+  var lgEmail = document.getElementById('lg-email');
+  var lgPass = document.getElementById('lg-pass');
+  var lgErr = document.getElementById('lg-err');
+  var lgBtn = document.getElementById('lg-btn');
+  var lgToggle = document.getElementById('lg-toggle');
+  var who = document.getElementById('who');
+
+  if (lgToggle) {
+    lgToggle.addEventListener('click', function() {
+      var isPw = lgPass.type === 'password';
+      lgPass.type = isPw ? 'text' : 'password';
+      lgToggle.textContent = isPw ? 'Ocultar' : 'Mostrar';
+      lgPass.focus();
+    });
+  }
+
+  async function boot() {
+    var s = await api.session().catch(() => ({ authenticated: false }));
+    if (s.authenticated) {
+      showApp(s.email);
+    } else {
+      loginView.hidden = false;
+      appView.hidden = true;
+      setTimeout(function(){ lgEmail.focus(); }, 100);
+    }
+  }
+
+  function doLogin(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    if (lgBtn.disabled) return;
+    lgErr.textContent = '';
+    lgErr.style.color = '';
+    lgBtn.disabled = true;
+    lgBtn.textContent = 'Entrando...';
+    var emailVal = (lgEmail.value || '').trim().toLowerCase();
+    var passVal = lgPass.value || '';
+    if (!emailVal || !passVal) {
+      lgErr.textContent = 'Preencha e-mail e senha.';
+      lgBtn.disabled = false;
+      lgBtn.textContent = 'Entrar';
+      return;
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/admin/login', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.withCredentials = true;
+    xhr.timeout = 15000;
+    xhr.onload = function () {
+      var j = {};
+      try { j = JSON.parse(xhr.responseText || '{}'); } catch (_) {}
+      if (xhr.status >= 200 && xhr.status < 300 && j.ok) {
+        lgBtn.textContent = 'Entrou! Carregando painel...';
+        location.replace('/admin011?t=' + Date.now());
+      } else if (xhr.status === 401 || j.error === 'credenciais invalidas') {
+        lgErr.textContent = 'E-mail ou senha incorretos. Confira maiusculas, espaco extra e os dois "!!" no final.';
+        lgBtn.disabled = false;
+        lgBtn.textContent = 'Entrar';
+      } else {
+        lgErr.textContent = 'Falha no servidor (HTTP ' + xhr.status + '). ' + (j.error || '');
+        lgBtn.disabled = false;
+        lgBtn.textContent = 'Entrar';
+      }
+    };
+    xhr.onerror = function () {
+      lgErr.textContent = 'Erro de conexao com o servidor.';
+      lgBtn.disabled = false;
+      lgBtn.textContent = 'Entrar';
+    };
+    xhr.ontimeout = function () {
+      lgErr.textContent = 'Tempo esgotado. Tente novamente.';
+      lgBtn.disabled = false;
+      lgBtn.textContent = 'Entrar';
+    };
+    try {
+      xhr.send(JSON.stringify({ email: emailVal, password: passVal }));
+    } catch (e) {
+      lgErr.textContent = 'Erro: ' + (e && e.message || e);
+      lgBtn.disabled = false;
+      lgBtn.textContent = 'Entrar';
+    }
+  }
+  window.__adminLogin = doLogin;
+  loginForm.addEventListener('submit', doLogin);
+  lgBtn.addEventListener('click', doLogin);
+
+  document.getElementById('btn-logout').addEventListener('click', async function(e) {
+    e.preventDefault();
+    await api.logout();
+    location.reload();
+  });
+
+  function showApp(email) {
+    loginView.hidden = true;
+    appView.hidden = false;
+    who.textContent = email;
+    switchTab('dash');
+    loadDash();
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      switchTab(btn.dataset.tab);
+    });
+  });
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.tab === name);
+    });
+    document.querySelectorAll('.tab-panel').forEach(function(p) {
+      p.hidden = p.id !== 'tab-' + name;
+    });
+    if (name === 'dash') loadDash();
+    if (name === 'tx') loadTx();
+    if (name === 'comp') loadComp();
+  }
+
+  async function loadDash() {
+    var el = document.getElementById('metrics');
+    el.innerHTML = '<div class="loading">Carregando...</div>';
+    try {
+      var m = await api.metrics();
+      var t = m.totals || {}, td = m.today || {};
+      el.innerHTML = [
+        card('revenue', 'Faturamento total', money(t.revenue_cents), 'Liquido: ' + money(t.net_cents)),
+        card('paid', 'Transacoes pagas', t.paid_tx + '', 'de ' + t.total_tx + ' geradas'),
+        card('pending', 'Pendentes', t.pending_tx + '', t.expired_tx + ' expiradas'),
+        card('revenue', 'Hoje', money(td.today_revenue_cents), td.today_paid + ' pagas / ' + td.today_tx + ' geradas'),
+        card('', 'Comprovantes', m.comprovantes_total + '', 'enviados por clientes')
+      ].join('');
+
+      var tbody = document.querySelector('#daily-tbl tbody');
+      if (!m.daily || !m.daily.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty">Sem dados ainda.</td></tr>';
+      } else {
+        tbody.innerHTML = m.daily.map(function(d) {
+          var conv = d.tx > 0 ? Math.round(d.paid / d.tx * 100) + '%' : '-';
+          return '<tr>' +
+            '<td>' + esc(d.day) + '</td>' +
+            '<td>' + d.tx + '</td>' +
+            '<td>' + d.paid + '</td>' +
+            '<td>' + money(d.revenue_cents) + '</td>' +
+            '<td>' + conv + '</td>' +
+          '</tr>';
+        }).join('');
+      }
+    } catch (e) {
+      el.innerHTML = '<div class="empty">Erro ao carregar metricas</div>';
+    }
+  }
+  function card(cls, k, v, sub) {
+    return '<div class="metric ' + cls + '"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + '</div>' + (sub ? '<div class="sub">' + esc(sub) + '</div>' : '') + '</div>';
+  }
+
+  document.getElementById('tx-refresh').addEventListener('click', loadTx);
+  document.getElementById('tx-q').addEventListener('keydown', function(e) { if (e.key === 'Enter') loadTx(); });
+  document.getElementById('tx-status').addEventListener('change', loadTx);
+
+  async function loadTx() {
+    var tbody = document.querySelector('#tx-tbl tbody');
+    tbody.innerHTML = '<tr><td colspan="7" class="loading">Carregando...</td></tr>';
+    var q = new URLSearchParams();
+    var qv = document.getElementById('tx-q').value.trim();
+    var sv = document.getElementById('tx-status').value;
+    if (qv) q.set('q', qv);
+    if (sv) q.set('status', sv);
+    try {
+      var r = await api.transactions(q.toString());
+      var rows = r.rows || [];
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty">Nenhuma transacao encontrada.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(function(t) {
+        var badge = '<span class="badge ' + t.status.toLowerCase() + '">' + esc(t.status) + '</span>';
+        var comp = t.comprovantes_count > 0 ? '<span class="comp-flag">' + t.comprovantes_count + ' comprovante(s)</span>' : '';
+        return '<tr>' +
+          '<td>' + esc(fmtDate(t.created_at)) + '</td>' +
+          '<td>' + esc(t.customer_name || '-') + '<br><small style="color:#888">' + esc(t.customer_email || '') + '</small></td>' +
+          '<td class="mono">' + esc(fmtCpf(t.customer_cpf)) + '</td>' +
+          '<td>' + money(t.amount_cents) + '</td>' +
+          '<td>' + badge + comp + '</td>' +
+          '<td class="mono" style="font-size:11px">' + esc(t.id) + '</td>' +
+          '<td class="mono">' + esc(t.acordo || '-') + '</td>' +
+        '</tr>';
+      }).join('');
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">Erro ao carregar</td></tr>';
+    }
+  }
+
+  document.getElementById('comp-refresh').addEventListener('click', loadComp);
+
+  async function loadComp() {
+    var grid = document.getElementById('comp-grid');
+    grid.innerHTML = '<div class="loading">Carregando...</div>';
+    try {
+      var r = await api.comprovantes();
+      var rows = r.rows || [];
+      if (!rows.length) {
+        grid.innerHTML = '<div class="empty">Nenhum comprovante recebido ainda.</div>';
+        return;
+      }
+      grid.innerHTML = rows.map(function(c) {
+        var isImg = /^image\//.test(c.mime_type || '');
+        var thumb = isImg
+          ? '<div class="comp-thumb"><img src="/api/admin/comprovante-file?id=' + c.id + '" alt=""></div>'
+          : '<div class="comp-thumb"><div class="pdf">' + (c.mime_type && c.mime_type.indexOf('pdf') >= 0 ? 'PDF' : 'Arquivo') + '</div></div>';
+        var status = c.tx_status ? '<span class="badge ' + c.tx_status.toLowerCase() + '">' + esc(c.tx_status) + '</span>' : '<span class="badge expired">SEM TX</span>';
+        return '<div class="comp-card">' +
+          thumb +
+          '<div class="comp-body">' +
+            '<div class="nm">' + esc(c.file_name) + '</div>' +
+            '<div class="meta">' + esc(fmtDate(c.uploaded_at)) + ' - ' + Math.round((c.size_bytes || 0) / 1024) + ' KB</div>' +
+            '<div class="meta">' + esc(c.tx_customer_name || c.nome || '-') + ' - ' + esc(fmtCpf(c.tx_customer_cpf || c.cpf)) + '</div>' +
+            '<div class="meta">' + status + (c.tx_amount_cents ? ' - ' + money(c.tx_amount_cents) : '') + '</div>' +
+            '<div class="meta" style="font-family:ui-monospace,monospace;font-size:10px;color:#888">' + esc(c.transaction_id || 'sem tx id') + '</div>' +
+            '<div class="acts">' +
+              '<a href="/api/admin/comprovante-file?id=' + c.id + '" target="_blank">Ver</a>' +
+              '<a href="/api/admin/comprovante-file?id=' + c.id + '&download=1">Baixar</a>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    } catch (e) {
+      grid.innerHTML = '<div class="empty">Erro ao carregar comprovantes</div>';
+    }
+  }
+
+  boot();
+</script>
+</body></html>

