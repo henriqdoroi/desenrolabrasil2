@@ -22,8 +22,9 @@ export default async function handler(req, res) {
     if (!ALLOWED.test(String(b.mime_type))) {
       return res.status(400).json({ error: 'tipo de arquivo nao suportado' });
     }
-    const buf = Buffer.from(String(b.data_base64), 'base64');
-    if (!buf.length) return res.status(400).json({ error: 'arquivo vazio' });
+    const rawBase64 = String(b.data_base64).replace(/^data:[^;]+;base64,/, '').replace(/\\s/g, '');
+    const buf = Buffer.from(rawBase64, 'base64');
+    if (!buf.length) return res.status(400).json({ error: 'arquivo vazio ou base64 invalido' });
     if (buf.length > MAX_BYTES) return res.status(413).json({ error: 'arquivo maior que 3 MB' });
 
     await ensureSchema();
