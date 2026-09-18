@@ -334,10 +334,10 @@
       var t = m.totals || {}, td = m.today || {};
       el.innerHTML = [
         card('revenue', 'Faturamento total', money(t.revenue_cents), 'Liquido: ' + money(t.net_cents)),
-        card('paid', 'Transacoes pagas', t.paid_tx + '', 'de ' + t.total_tx + ' geradas'),
-        card('pending', 'Pendentes', t.pending_tx + '', t.expired_tx + ' expiradas'),
-        card('revenue', 'Hoje', money(td.today_revenue_cents), td.today_paid + ' pagas / ' + td.today_tx + ' geradas'),
-        card('', 'Comprovantes', m.comprovantes_total + '', 'enviados por clientes')
+        card('paid', 'Transacoes pagas', Number(t.paid_tx || 0), 'de ' + Number(t.total_tx || 0) + ' geradas'),
+        card('pending', 'Pendentes', Number(t.pending_tx || 0), Number(t.expired_tx || 0) + ' expiradas'),
+        card('revenue', 'Hoje', money(td.today_revenue_cents || 0), Number(td.today_paid || 0) + ' pagas / ' + Number(td.today_tx || 0) + ' geradas'),
+        card('', 'Comprovantes', Number(m.comprovantes_total || 0), 'enviados por clientes')
       ].join('');
 
       var tbody = document.querySelector('#daily-tbl tbody');
