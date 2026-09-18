@@ -1026,7 +1026,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            transaction_id: window.__pixTxId || null,
+            transaction_id: window.__pixTxId || (function(){ try { var s = JSON.parse(sessionStorage.getItem('desenrola.pagamento') || '{}'); return s.transactionId || null; } catch (_) { return null; } })(),
             cpf: (params.get('cpf') || '').replace(/\D/g,''),
             nome: params.get('nome') || '',
             acordo: params.get('acordo') || '',
